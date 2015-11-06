@@ -1,0 +1,17 @@
+extends layout
+append content
+	#content
+		div.central
+			h1 Login
+			.hello
+				if (message.length > 0)
+					div#message=message
+				form(action="/login" method="post")
+					label Email:
+					input(type="text" name="email")
+					br
+					label Password:
+					input(type="password" name="password")
+					br
+					button(type="submit") Log in 
+				a#forgetful(href="/forgotten") Forgotten your password?

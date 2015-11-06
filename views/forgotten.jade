@@ -1,0 +1,13 @@
+extends layout
+append content
+	#content
+		div.central
+			h1 Send new password
+			.hello
+				if (message.length > 0)
+					div#message=message
+				form(action="/forgotten" method="post")
+					label Email:
+					input(type="text" name="email")
+					br
+					button(type="submit") Send password 
