@@ -14,6 +14,7 @@ angular.module("busilyApp")
         down:[]
       };
       this.winners = [];
+      this.wingrid = [];
     }
 
     RosterObject.prototype.add = function (values, row, col, endRow, endCol, type) {
@@ -94,9 +95,9 @@ angular.module("busilyApp")
 
             var startRow = this.dates[i].linked ? this.dates[i].startRow + 2 : this.dates[i].startRow + 1;
 
-            if (typeof gridObject.grid[startRow][edgeEnd] != 'undefined' && gridObject.grid[startRow][edgeEnd] != "") {
+            if (typeof gridObject.grid[startRow][edgeEnd] != 'undefined' /*&& gridObject.grid[startRow][edgeEnd] != ""*/) {
               for (var j = edgeEnd; j >= 0; j--) {
-                if ((typeof gridObject.grid[startRow][j] != 'undefined' && gridObject.grid[startRow][j] != "") &&
+                if ((typeof gridObject.grid[startRow][j] != 'undefined' /*&& gridObject.grid[startRow][j] != ""*/) &&
                   (typeof this.key[startRow-1] == 'undefined' || typeof this.key[startRow-1][j] == 'undefined' || this.dates[this.key[startRow-1][j]].direction != this.dates[i].direction)) {
                   edgeStart = j;
                 } else {
@@ -195,9 +196,9 @@ angular.module("busilyApp")
 
             var startCol = this.dates[i].linked ? this.dates[i].startCol + 2 : this.dates[i].startCol + 1;
 
-            if (typeof gridObject.grid[edgeEnd] != 'undefined' && gridObject.grid[edgeEnd][startCol] != "") {
+            if (typeof gridObject.grid[edgeEnd] != 'undefined'/* && gridObject.grid[edgeEnd][startCol] != ""*/) {
               for (j = edgeEnd; j >= 0; j--) {
-                if ((typeof gridObject.grid[j][startCol] != 'undefined' && gridObject.grid[j][startCol] != "") &&
+                if ((typeof gridObject.grid[j][startCol] != 'undefined'/* && gridObject.grid[j][startCol] != ""*/) &&
                   (typeof this.key[j] == 'undefined' || typeof this.key[j][startCol-1] == 'undefined' || this.dates[this.key[j][startCol-1]].direction != this.dates[i].direction)) {
                   edgeStart = j;
                 } else {
@@ -402,19 +403,19 @@ angular.module("busilyApp")
 
           scores[index] = 0;
 
-          if (attr.max >= 28 && attr.max <= 31) {
+          if (attr.max >= 28 && attr.max <= 31) { // max numbers one of 28, 29, 30, 31 = strong indicator of months
             scores[index] += 50;
           } else if (indexSplit[1] != 'weekdays' && (attr.count > attr.max || attr.count < attr.min)) {
             scores[index] -= 25;
           }
-          if (indexSplit[indexSplit.length-1] == 'linked') {
+          if (indexSplit[indexSplit.length-1] == 'linked') { // incremental days + neighbouring weekdays = slam dunk
             scores[index] += 50;
           }
-          if (indexSplit[1] == 'weekdays') {
+          if (indexSplit[1] == 'weekdays') { // presence of weekdays means you're on to something!
             scores[index] += 25;
           }
-          if (attr.colCount > attr.matchingBlocks) {
-            scores[index] -= 15;
+          if (attr.colCount <= attr.matchingBlocks) { // nice if they're all in a line
+            scores[index] += 10;
           }
           if (indexSplit[1] != 'd') { // more interesting if not just an integer?
             scores[index] += 10;
@@ -439,7 +440,8 @@ angular.module("busilyApp")
         }
       }
 
-      if (scoreMax.score > 0) {
+      // Hooooraaayyyyy we have a winner
+      if (scoreMax.score >= 0) {
         var linkRequired = false;
         if (scoreMax.index[scoreMax.index.length - 1] == 'linked') {
           linkRequired = true;
@@ -458,8 +460,268 @@ angular.module("busilyApp")
             this.winners.push(this.possibles[scoreMax.index[0]][i]);
           }
         }
+
+
+        var foundMonthsYears = {
+          months:-1,
+          years:-1,
+          daysPos:this.winners[0].stats.date.matchPosition,
+          monthsPos:-1,
+          yearsPos:-1,
+          monthsText:""
+        }
+        var foundTextMonth;
+        var monthsYears = [];
+
+        // let's figure out dates
+        if (this.winners[0].stats.date.allNums.length > 1) {
+          // brilliant we've got more than just a day
+
+          // allNums is an array containing all the variants found, e.g.
+          // 31-01-2015, 01-02-2015, 02-02-2015
+          // allNums would be [[],[1,2],[2015]]
+          // (it ignores days)
+          for (i=0; i<this.winners[0].stats.date.allNums.length; i++) {
+            if (this.winners[0].stats.date.matchPosition != i) {
+              monthsYears.push([this.winners[0].stats.date.allNums[i],i]);
+            }
+          }
+          if (monthsYears.length == 2) {
+            if (monthsYears[0][0][0] > 2000) {
+              foundMonthsYears.months = monthsYears[1][0];
+              foundMonthsYears.monthsPos = monthsYears[1][1];
+              foundMonthsYears.years = monthsYears[0][0];
+              foundMonthsYears.yearsPos = monthsYears[0][1];
+            } else if (monthsYears[1][0][0] > 2000) {
+              foundMonthsYears.months = monthsYears[0][0];
+              foundMonthsYears.monthsPos = monthsYears[0][1];
+              foundMonthsYears.years = monthsYears[1][0];
+              foundMonthsYears.yearsPos = monthsYears[1][1];
+            } else if (monthsYears[0][0].length < monthsYears[1][0].length) {
+              foundMonthsYears.months = monthsYears[1][0];
+              foundMonthsYears.monthsPos = monthsYears[1][1];
+              foundMonthsYears.years = parseInt(monthsYears[0][0])+2000;
+              foundMonthsYears.yearsPos = monthsYears[0][1];
+            } else if (monthsYears[0][0].length > monthsYears[1][0].length) {
+              foundMonthsYears.months = monthsYears[0][0];
+              foundMonthsYears.monthsPos = monthsYears[0][1];
+              foundMonthsYears.years = parseInt(monthsYears[1][0])+2000;
+              foundMonthsYears.yearsPos = monthsYears[1][1];
+            } else if (monthsYears[0][0][0] <= 12) {
+              foundMonthsYears.months = monthsYears[0][0];
+              foundMonthsYears.monthsPos = monthsYears[0][1];
+              foundMonthsYears.years = parseInt(monthsYears[1][0])+2000;
+              foundMonthsYears.yearsPos = monthsYears[1][1];
+            } else {
+              foundMonthsYears.months = monthsYears[1][0];
+              foundMonthsYears.monthsPos = monthsYears[1][1];
+              foundMonthsYears.years = parseInt(monthsYears[0][0])+2000;
+              foundMonthsYears.yearsPos = monthsYears[0][1];
+            }
+          } else if (monthsYears.length == 1) {
+            if (monthsYears[0][0][0] > 2000) {
+              foundMonthsYears.years = monthsYears[0][0];
+              foundMonthsYears.yearsPos = monthsYears[0][1];
+            } else if (monthsYears[0][0][0] <= 12) {
+              foundMonthsYears.months = monthsYears[0][0];
+              foundMonthsYears.monthsPos = monthsYears[0][1];
+            } else {
+              foundMonthsYears.years = monthsYears[0][0]+2000;
+              foundMonthsYears.yearsPos = monthsYears[0][1];
+            }
+          }
+        } else if (this.winners[0].stats.date.type != "weekdays" && this.winners[0].stats.date.matchFormat.indexOf("w") > -1) {
+
+          if (!this.winners[0].dates[0].linked || this.winners[0].dates[0].linkMaster) {
+            foundTextMonth = findMonthStr(this.winners[0].dates[0].values[0].original);
+          } else {
+            foundTextMonth = findMonthStr(this.winners[0].dates[1].values[0].original);
+          }
+
+          if (foundTextMonth.found) {
+            foundMonthsYears.months = foundTextMonth.month;
+            foundMonthsYears.monthsText = foundTextMonth.monthText;
+          }
+        }
+
+
+        if (foundMonthsYears.months == -1 || foundMonthsYears.years == -1) {
+
+          // let's search backwards before each found date object to see if a month/year shows up
+          // TODO: check sheet tab name and file name
+
+          var tmpRow = Math.min(this.winners[0].stats.date.startRow,
+                                this.winners[0].stats.edge.startRow,
+                                this.winners[0].stats.date.linked ? this.winners[0].stats.date.linked.startRow : this.winners[0].stats.date.startRow);
+          var rowAbove = [];
+          var rowAboveFound = {
+            months: foundMonthsYears.months,
+            years: foundMonthsYears.years,
+            monthsPos: foundMonthsYears.monthsPos,
+            yearsPos: foundMonthsYears.yearsPos,
+            monthsText: foundMonthsYears.monthsText
+          };
+          var curYear = (new Date()).getFullYear();
+          for (var twoRowsAbove = 1; twoRowsAbove <= 2; twoRowsAbove++) {
+            if (tmpRow - twoRowsAbove >= 0) {
+              rowAbove = gridObject.getRow("right", tmpRow - twoRowsAbove, 0);
+
+              for (var rowAboveCnt = 0; rowAboveCnt < rowAbove.length; rowAboveCnt++) {
+                if (rowAbove[rowAboveCnt] != "") {
+
+                  if (rowAboveFound.months == -1) {
+                    var rowAboveMonthText = findMonthStr(rowAbove[rowAboveCnt]);
+                    if (rowAboveMonthText.found) {
+                      rowAboveFound.months = rowAboveMonthText.month;
+                      rowAboveFound.monthsText = rowAboveMonthText.monthText;
+                    }
+                  }
+
+                  var rowAboveNums = findNums(rowAbove[rowAboveCnt]);
+
+                  for (var rowAboveNumsCnt = 0; rowAboveNumsCnt < rowAboveNums.length; rowAboveNumsCnt++) {
+                    if (rowAboveFound.years == -1) {
+                      if (rowAboveNums[rowAboveNumsCnt].parsed >= curYear - 2 && rowAboveNums[rowAboveNumsCnt].parsed <= curYear + 2) {
+                        rowAboveFound.years = rowAboveNums[rowAboveNumsCnt].parsed;
+                      } else if (rowAboveNums[rowAboveNumsCnt].parsed >= curYear - 2000 - 2 && rowAboveNums[rowAboveNumsCnt].parsed <= curYear - 2000 + 2) {
+                        rowAboveFound.years = rowAboveNums[rowAboveNumsCnt].parsed + 2000;
+                      }
+                    }
+                    if (rowAboveFound.months == -1) {
+                      if (rowAboveNums[rowAboveNumsCnt].parsed <= 12) {
+                        rowAboveFound.months = rowAboveNums[rowAboveNumsCnt].parsed;
+                      }
+                    }
+                  }
+                }
+
+                if (rowAboveFound.months != -1 && rowAboveFound.years != -1)
+                  break;
+              }
+            }
+
+          }
+          if (rowAboveFound.months > -1) {
+            foundMonthsYears.months = rowAboveFound.months;
+            if (rowAboveFound.monthsText != "")
+              foundMonthsYears.monthsText = rowAboveFound.monthsText;
+          }
+          if (rowAboveFound.years > -1)
+            foundMonthsYears.years = rowAboveFound.years;
+        }
+
+        if (foundMonthsYears.years == -1) {
+          //if (this.winners[0].dates[0].type == "weekdays") {
+          //  if ((new Date().setFullYear(curYear,foundMonthsYears.months,day).getDay() == values[0][3]%7) {
+          //
+          //  }
+          //}
+        }
+
+        this.winners[0].stats.date.foundMonthsYears = foundMonthsYears;
+
+        // let's remake the grid identifying the bits we've found
+        /*this.wingrid = [];
+        for (var winRow=0; winRow<=gridObject.maxRow; winRow++) {
+          this.wingrid[winRow] = [];
+          for (var winCol=0; winCol<=gridObject.maxCol; winCol++) {
+            this.wingrid[winRow][winCol] = {
+              value: gridObject.grid[winRow][winCol],
+              class: ""
+            };
+          }
+        }
+        for (var wins=0; wins<this.winners.length; wins++) {
+          for (winRow=this.winners[wins].body.startRow; winRow<=this.winners[wins].body.endRow; winRow++) {
+            for (winCol=this.winners[wins].body.startCol; winCol<=this.winners[wins].body.endCol; winCol++) {
+              this.wingrid[winRow][winCol].class = "rotabody";
+            }
+          }
+          if (this.winners[wins].edge.startRow >= 0 && this.winners[wins].edge.startCol >= 0) {
+            for (winRow = this.winners[wins].edge.startRow; winRow <= this.winners[wins].edge.endRow; winRow++) {
+              for (winCol = this.winners[wins].edge.startCol; winCol <= this.winners[wins].edge.endCol; winCol++) {
+                this.wingrid[winRow][winCol].class = "rotaedge";
+              }
+            }
+          }
+          for (var winDates=0; winDates<this.winners[wins].dates.length; winDates++) {
+            for (winRow=this.winners[wins].dates[winDates].startRow; winRow<=this.winners[wins].dates[winDates].endRow; winRow++) {
+              for (winCol=this.winners[wins].dates[winDates].startCol; winCol<=this.winners[wins].dates[winDates].endCol; winCol++) {
+                this.wingrid[winRow][winCol].class = "rotadate";
+              }
+            }
+          }
+        }
+        */
       }
     };
+
+    RosterObject.prototype.findLegend = function(gridObject) {
+
+      var shiftTypes = {};
+
+      // can only be run once consolidate has found a winner
+      if (this.winners.length > 0) {
+
+        for (var wins=0; wins<this.winners.length; wins++) {
+          for (var winRow = this.winners[wins].body.startRow; winRow <= this.winners[wins].body.endRow; winRow++) {
+            for (var winCol = this.winners[wins].body.startCol; winCol <= this.winners[wins].body.endCol; winCol++) {
+
+              if (gridObject.grid[winRow][winCol].trim() != "") {
+                if (typeof shiftTypes[gridObject.grid[winRow][winCol]] == 'undefined') {
+                  shiftTypes[gridObject.grid[winRow][winCol].trim()] = 1;
+                } else {
+                  shiftTypes[gridObject.grid[winRow][winCol].trim()]++;
+                }
+              }
+            }
+          }
+        }
+        gridObject.setPath();
+
+
+        //do {
+        //
+        //  var curPos = {
+        //    row:gridObject.getRowNum(),
+        //    col:gridObject.getColNum()
+        //  };
+        //
+        //  if (this.wingrid[curPos.row][curPos.col].class == "") {
+        //
+        //    var cellObj = gridObject.get();
+        //
+        //    if (cellObj.value.trim() in shiftTypes) {
+        //      console.log(curPos.row);
+        //      break;
+        //    }
+        //  }
+        //
+        //  gridObject.next(true, false); // goddamn skipvisited
+        //
+        //} while (!gridObject.isEnd());
+
+      }
+
+    };
+
+    var rxNum = /\d+/g;
+
+    function findNums(str) {
+      var retArr = [];
+      var myArray;
+      while ((myArray = rxNum.exec(str)) !== null) {
+        retArr.push(
+          {
+            original:myArray[0],
+            parsed:parseFloat(myArray[0]),
+            startIndex:myArray.index,
+            endIndex:myArray.index+myArray[0].length,
+            length:myArray[0].length
+          });
+      }
+      return retArr;
+    }
 
     function isMonthDay(num1, num2) {
 
@@ -483,6 +745,45 @@ angular.module("busilyApp")
       return isMonthDay;
     }
 
+    function findMonthStr(inputStr) {
+
+      var monthsObj = {
+        jan:1,
+        feb:2,
+        mar:3,
+        apr:4,
+        may:5,
+        jun:6,
+        jul:7,
+        aug:8,
+        sep:9,
+        oct:10,
+        nov:11,
+        dec:12
+      }
+
+      // TODO: language
+      var monthrx = /jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/;
+
+      var retObj = {
+        found:false,
+        month:-1,
+        monthText:""
+      };
+
+      var monthrxMatch = inputStr.toLowerCase().match(monthrx);
+
+      if (monthrxMatch && monthsObj[monthrxMatch[0]] > 0) {
+        retObj = {
+          found:true,
+          month:monthsObj[monthrxMatch[0]],
+          monthText:monthrxMatch[0]
+        }
+      }
+
+      return retObj;
+    }
+
     function calculateDateObjectStats(date, edge, body, dateLinked) {
       var stats = {};
 
@@ -490,12 +791,24 @@ angular.module("busilyApp")
       stats.date.type = date.type;
       stats.date.min = 9999999999;
       stats.date.max = -1;
+      stats.date.allNums = [];
       if (date.type != "weekdays") {
         stats.date.increment = date.values[0].matchType;
         stats.date.matchFormat = date.values[0].matchFormat;
+        stats.date.matchPosition = date.values[0].matchPosition;
+
         for (var i=0;i<date.values.length;i++) {
           stats.date.min = Math.min(stats.date.min, date.values[i].parsed);
           stats.date.max = Math.max(stats.date.max, date.values[i].parsed);
+
+          for (var j=0;j<date.values[i].allNums.length;j++) {
+            if (typeof stats.date.allNums[j] == 'undefined') {
+              stats.date.allNums[j] = [];
+            }
+            if (j != date.values[i].matchPosition && stats.date.allNums[j][stats.date.allNums[j].length-1] != date.values[i].allNums[j]) {
+              stats.date.allNums[j].push(date.values[i].allNums[j]);
+            }
+          }
         }
       } else {
         for (i=0;i<date.values.length;i++) {
@@ -539,10 +852,11 @@ angular.module("busilyApp")
       stats.body.values = {};
       for (var j=0; j<body.values.length; j++) {
         for (var k=0; k<body.values[j].length; k++) {
-          if (stats.body.values[body.values[j][k]] > 0) {
-            stats.body.values[body.values[j][k]]++;
+          var bodyValue = body.values[j][k].trim().toUpperCase();
+          if (stats.body.values[bodyValue] > 0) {
+            stats.body.values[bodyValue]++;
           } else {
-            stats.body.values[body.values[j][k]] = 1;
+            stats.body.values[bodyValue] = 1;
           }
         }
       }

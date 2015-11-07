@@ -100,11 +100,16 @@ angular.module("busilyApp")
           var numSnap = [[], [], [], [], []];
 
           var parsedNumber1, parsedNumber2;
+          var allNums1 = [];
+          var allNums2 = [];
 
           for (var i = 0; i < matches[0].length; i++) {
 
             parsedNumber1 = matches[0][i].parsed;
             parsedNumber2 = matches[1][i].parsed;
+
+            allNums1.push(matches[0][i].parsed);
+            allNums2.push(matches[1][i].parsed);
 
             var monthDay = isMonthDay(parsedNumber1, parsedNumber2);
 
@@ -136,7 +141,8 @@ angular.module("busilyApp")
                 matchPosition: numSnap[0][0][0],
                 matchFormat: strFmt,
                 originals: [cell1, cell2],
-                matches: [numSnap[0][0][1], matches[1][numSnap[0][0][0]]]
+                matches: [numSnap[0][0][1], matches[1][numSnap[0][0][0]]],
+                allNums: [allNums1, allNums2]
               };
 
               return retObj;
@@ -148,7 +154,8 @@ angular.module("busilyApp")
                 matchPosition: numSnap[1][0][0],
                 matchFormat: strFmt,
                 originals: [cell1, cell2],
-                matches: [numSnap[1][0][1], matches[1][numSnap[1][0][0]]]
+                matches: [numSnap[1][0][1], matches[1][numSnap[1][0][0]]],
+                allNums: [allNums1, allNums2]
               };
 
               return retObj;
@@ -160,21 +167,23 @@ angular.module("busilyApp")
                 matchPosition: numSnap[1][0][0],
                 matchFormat: strFmt,
                 originals: [cell1, cell2],
-                matches: [numSnap[1][0][1], matches[1][numSnap[1][0][0]]]
+                matches: [numSnap[1][0][1], matches[1][numSnap[1][0][0]]],
+                allNums: [allNums1, allNums2]
               };
 
               return retObj;
 
               // two incrementing by 1 - must be the end of a month or year
             } else if (numSnap[0].length == 2 && numSnap[1].length == 0) {
-              for (var k=0; k<=numSnap[0].length; k++) {
+              for (var k=0; k<numSnap[0].length; k++) {
                 if (numSnap[0][k][1].parsed >= 28 && numSnap[0][k][1].parsed <= 31) {
                   retObj = {
                     matchType: 1,
                     matchPosition: numSnap[0][k][0],
                     matchFormat: strFmt,
                     originals: [cell1, cell2],
-                    matches: [numSnap[0][k][1], matches[1][numSnap[0][k][0]]]
+                    matches: [numSnap[0][k][1], matches[1][numSnap[0][k][0]]],
+                    allNums: [allNums1, allNums2]
                   };
 
                   return retObj;
@@ -212,7 +221,8 @@ angular.module("busilyApp")
               matchFormat: matches.matchFormat,
               weekday: "",
               startIndex: matches.matches[0].startIndex,
-              endIndex: matches.matches[0].endIndex
+              endIndex: matches.matches[0].endIndex,
+              allNums: matches.allNums[0]
             },
             {
               original: matches.originals[1],
@@ -223,7 +233,8 @@ angular.module("busilyApp")
               matchFormat: matches.matchFormat,
               weekday: "",
               startIndex: matches.matches[1].startIndex,
-              endIndex: matches.matches[1].endIndex
+              endIndex: matches.matches[1].endIndex,
+              allNums: matches.allNums[1]
             }
           ];
 
@@ -242,6 +253,10 @@ angular.module("busilyApp")
               var tmpNums = findNums(arr[j]);
               var isMthNum = isMonthDay(prevNum, tmpNums[matches.matchPosition].parsed);
 
+              var tmpAllNums = [];
+              for (var k=0; k<tmpNums.length; k++)
+                tmpAllNums.push(tmpNums[k].parsed);
+
               if (isMthNum == matches.matchType) {
                 prevNum = tmpNums[matches.matchPosition].parsed;
 
@@ -254,7 +269,8 @@ angular.module("busilyApp")
                   matchFormat: matches.matchFormat,
                   weekday: "",
                   startIndex: tmpNums[matches.matchPosition].startIndex,
-                  endIndex: tmpNums[matches.matchPosition].endIndex
+                  endIndex: tmpNums[matches.matchPosition].endIndex,
+                  allNums: tmpAllNums
                 }
 
                 // if there's a weekday keep it

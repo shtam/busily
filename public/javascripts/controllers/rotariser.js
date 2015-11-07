@@ -90,7 +90,82 @@ app.controller("MainRotariser",
             for (var cols=0; cols<=grid.maxCol; cols++)
               colNames.push(cols);
 console.log(rostObj.winners);
-            var winResults = [];
+
+
+            var finalRota = {
+              shifts:[],
+              people:[],
+              pattern:[],
+              startDate:new Date()
+            };
+
+            if (rostObj.winners[0].stats.date.foundMonthsYears.months != -1 && rostObj.winners[0].stats.date.foundMonthsYears.years != -1) {
+
+              if (rostObj.winners[0].dates[0].type == "weekdays" && rostObj.winners[0].dates[0].linked == 1) {
+                var winningDay = rostObj.winners[0].dates[1].values[0].parsed;
+              } else {
+                winningDay = rostObj.winners[0].dates[0].values[0].parsed;
+              }
+
+              finalRota.startDate.setFullYear(
+                  rostObj.winners[0].stats.date.foundMonthsYears.years,
+                  rostObj.winners[0].stats.date.foundMonthsYears.months[0],
+                  winningDay
+              );
+            }
+
+            var shiftLookup = {};
+            var peopleLookup = {};
+
+            var peeps = {};
+
+            for (var wins=0; wins<rostObj.winners.length; wins++) {
+              for (var shiftName in rostObj.winners[wins].stats.body.values) {
+                if (shiftName != "" && !(shiftName in shiftLookup)) {
+                  finalRota.shifts.push({
+                    name: shiftName,
+                    startTime: [],
+                    endTime: [],
+                    colour: "",
+                    description: ""
+                  });
+                  shiftLookup[shiftName] = finalRota.shifts.length-1;
+                }
+              }
+              for (var peepCount = 0; peepCount < rostObj.winners[wins].edge.values.length; peepCount++) {
+                var peepName = rostObj.winners[wins].edge.values[peepCount].join(" ").trim();
+                if (!(peepName in peopleLookup)) {
+                  finalRota.people.push({
+                    id: finalRota.people.length,
+                    name: peepName
+                  });
+                  peopleLookup[peepName] = finalRota.people.length-1;
+                  peeps[peepName] = [];
+                }
+                for (var dateCount = 0; dateCount < rostObj.winners[wins].dates[0].values.length; dateCount++) {
+                  peeps[peepName].push(
+                      [rostObj.winners[wins].dates[0].values[dateCount].original,
+                        rostObj.winners[wins].body.values[peepCount][dateCount].trim().toUpperCase()
+                      ]);
+                }
+              }
+            }
+            // could use median number of days for all people - for now let's just use the number of days the first person has
+            for (var lengthInDays=0; lengthInDays < peeps[finalRota.people[0].name].length; lengthInDays++) {
+              finalRota.pattern.push([]);
+              for (peepCount = 0; peepCount < finalRota.people.length; peepCount++) {
+                peepName = finalRota.people[peepCount].name;
+                shiftName = peeps[peepName][lengthInDays][1];
+
+                if (shiftName != "") { // blank shift
+                  finalRota.pattern[lengthInDays][peopleLookup[peepName]] = shiftLookup[shiftName];
+                }
+              }
+            }
+
+console.log(finalRota);
+
+/*            var winResults = [];
             for (var winRow=0; winRow<=grid.maxRow; winRow++) {
               winResults[winRow] = [];
               for (var winCol=0; winCol<=grid.maxCol; winCol++) {
@@ -129,7 +204,7 @@ console.log(rostObj.winners);
             };
 
             $scope.importedRota = gridDisplay;
-
+*/
           }
         }
 
