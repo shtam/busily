@@ -98,6 +98,7 @@ function(req, email, password, done) {
 mongoose.connect('mongodb://localhost/busily');
 
 require('./models/user');
+require('./models/rota');
 require('./controllers/rotainputController')(app, passport);
 require('./controllers/userController')(app, passport);
 
