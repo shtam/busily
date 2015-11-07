@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>My shifts</h2>
+
+  <!-- Todos input -->
+  <form role="form" ng-submit="parseShifts()">
+    <div class="row">
+      <div class="input-group">
+        <input ng-model="name" />
+        <textarea ng-model="shifts" placeholder="What needs to be done?" ng-trim="false" rows="4" cols="50"></textarea>
+                <span class="input-group-btn">
+                  <input type="submit" class="btn btn-primary" value="Add">
+                </span>
+      </div>
+    </div>
+  </form>
+
+  <table class="table">
+    <tbody>
+    <tr ng-repeat="row in importedRota.rows">
+      <td ng-repeat="col in importedRota.cols" class="{{row[col].class}}">{{row[col].value}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
