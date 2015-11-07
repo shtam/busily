@@ -1,15 +1,14 @@
-<div class="container">
+<div class="md-padding dialogdemoBasicUsage" id="popupContainer" ng-cloak="">
   <h2>My shifts</h2>
 
   <!-- Todos input -->
-  <form role="form" ng-submit="parseShifts()">
+  <form role="form">
     <div class="row">
       <div class="input-group">
-        <input ng-model="name" />
-        <textarea ng-model="shifts" placeholder="What needs to be done?" ng-trim="false" rows="4" cols="50"></textarea>
-                <span class="input-group-btn">
-                  <input type="submit" class="btn btn-primary" value="Add">
-                </span>
+        <textarea ng-model="shifts" placeholder="What needs to be done?" ng-trim="false" rows="10" cols="50"></textarea>
+        <md-button class="md-primary md-raised" ng-click="parseShifts($event)" flex-sm="100" flex-md="100" flex-gt-md="auto">
+          Automagic
+        </md-button>
       </div>
     </div>
   </form>
@@ -22,3 +21,36 @@
     </tbody>
   </table>
 </div>
+
+
+
+<script type="text/ng-template" id="rota-options.dialog.html">
+  <md-dialog aria-label="Rota options" ng-cloak>
+    <form>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h2>Hooray it worked!</h2>
+        </div>
+      </md-toolbar>
+
+      <md-dialog-content>
+        <div class="md-dialog-content" layout="column">
+          <h2 ng-if="ctrl.parent.finalRota.userID > -1">And who might you be?</h2>
+          <md-select aria-label="User's name on rota" ng-if="ctrl.parent.finalRota.userID > -1" ng-model="ctrl.parent.finalRota.userID">
+            <md-option ng-repeat="peep in ctrl.parent.finalRota.people" value="{{peep.id}}">
+              {{peep.name}}
+            </md-option>
+          </md-select>
+          <h2>What's your rota's start date?</h2>
+          <md-datepicker ng-model="ctrl.parent.finalRota.startDate" md-placeholder="Enter date"></md-datepicker>
+        </div>
+      </md-dialog-content>
+
+      <div class="md-actions" layout="row">
+        <md-button ng-click="ctrl.parent.hideRotaDialog('useful')" class="md-primary">
+          Let's go!
+        </md-button>
+      </div>
+    </form>
+  </md-dialog>
+</script>

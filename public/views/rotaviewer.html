@@ -1,0 +1,30 @@
+<div ng-controller="RotaViewer as rv">
+
+    <h1>Shifts</h1>
+    <md-grid-list
+            md-cols-gt-md="12" md-cols-sm="3" md-cols-md="8"
+            md-row-height-gt-md="1:1" md-row-height="4:3"
+            md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
+
+        <md-grid-tile ng-repeat="shift in finalRota.shifts" ng-style="{'background':shift.colour}">
+            <md-grid-tile-footer>
+                <h3>{{shift.name}}</h3>
+            </md-grid-tile-footer>
+        </md-grid-tile>
+    </md-grid-list>
+
+    <h1>Rota Pattern</h1>
+
+    <md-grid-list
+            md-cols-gt-md="12" md-cols-sm="3" md-cols-md="8"
+            md-row-height-gt-md="1:1" md-row-height="4:3"
+            md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
+
+        <md-grid-tile ng-repeat="rota in finalRota.pattern" ng-style="{'background':finalRota.shifts[rota[finalRota.userID]].colour}">
+            <md-grid-tile-footer ng-if="rota[finalRota.userID] > -1">
+                <h3>{{finalRota.shifts[rota[finalRota.userID]].name}}</h3>
+            </md-grid-tile-footer>
+        </md-grid-tile>
+    </md-grid-list>
+
+</div>

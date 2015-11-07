@@ -2,7 +2,8 @@
 var app = angular.module('busilyApp', [
 	'ngMaterial',
 	'ngRoute',
-	'ngResource'
+	'ngResource',
+	'LocalStorageModule'
 	]);
 
 
@@ -20,5 +21,9 @@ app.config(['$routeProvider', function ($routeProvider) {
 		.when('/', {
 			templateUrl: 'views/rotariser.html',
 			controller: 'MainRotariser'
+		})
+		.when('/rotaviewer', {
+			templateUrl: 'views/rotaviewer.html',
+			controller: 'RotaViewer'
 		})
 }]);
