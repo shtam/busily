@@ -152,7 +152,7 @@ app.controller("MainRotariser",
 
                   finalRota.startDate.setFullYear(
                       rostObj.winners[0].stats.date.foundMonthsYears.years,
-                      rostObj.winners[0].stats.date.foundMonthsYears.months[0],
+                      rostObj.winners[0].stats.date.foundMonthsYears.months[0]-1,
                       winningDay
                   );
                 }
@@ -220,7 +220,7 @@ app.controller("MainRotariser",
                     peepName = finalRota.people[peepCount].name;
                     finalRota.pattern[lengthInDays][peopleLookup[peepName]] = -1; // assume not working
 
-                    if (peeps[peepName].length >= lengthInDays) {
+                    if (peeps[peepName].length > lengthInDays) {
                       shiftName = peeps[peepName][lengthInDays][1];
 
                       if (shiftName != "") { // blank shift
