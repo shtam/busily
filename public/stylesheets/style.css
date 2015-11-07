@@ -18,3 +18,13 @@ md-sidenav.md-locked-open {
   min-width: 150px !important;
   max-width: 150px !important;
 }
+
+.rotabody {
+  background-color: #ff0000;
+}
+.rotaedge {
+  background-color: #0000ff;
+}
+.rotadate {
+  background-color: #00ff00;
+}

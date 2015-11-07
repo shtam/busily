@@ -1,11 +1,6 @@
-/**
- * Created by Andy on 11/01/2015.
- */
+var app = angular.module("busilyApp");
 
-'use strict';
-
-angular.module("busilyApp")
-  .controller("MainRotariser",
+app.controller("MainRotariser",
     ["$scope", "GridObject", "findincremental", "datefinder", "RosterObject",
       function ($scope, GridObject, findincremental, datefinder, RosterObject) {
 
