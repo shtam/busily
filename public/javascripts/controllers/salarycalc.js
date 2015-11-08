@@ -1,6 +1,6 @@
 var app = angular.module("busilyApp");
 
-app.controller("JuniorDoctorCalculator",
+app.controller("SalaryCalc",
 	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService",
 
 		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {

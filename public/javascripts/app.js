@@ -26,14 +26,14 @@ app.config(['$routeProvider', function ($routeProvider) {
 			templateUrl: 'views/rotaviewer.html',
 			controller: 'RotaViewer'
 		})
-		.when('/juniordoctorcalculator', {
-			templateURL: 'views/juniordoctorcalculator.html',
-			controller: 'JuniorDoctorCalculator'
+		.when('/salary', {
+			templateUrl: 'views/salarycalc.html',
+			controller: 'SalaryCalc'
 		})
 }]);
 
-app.config(function($mdDateLocaleProvider) {
+app.config(['$mdDateLocaleProvider', function($mdDateLocaleProvider) {
 	$mdDateLocaleProvider.formatDate = function(date) {
 		return moment(date).format('YYYY-MM-DD');
 	};
-});
+}]);

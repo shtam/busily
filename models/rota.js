@@ -15,6 +15,7 @@ var sPatterns = new mongoose.Schema ({
 
 var rotaSchema = new mongoose.Schema ({
 	ownerid: String,
+	userID: Number,
 	//location: {
 	//	display-name: String
 	//},

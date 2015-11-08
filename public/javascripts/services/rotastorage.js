@@ -14,17 +14,24 @@ angular.module("busilyApp")
 			getRota: function(userID, rotaID) {
 				return $http.get("api/rota")
 					.then(
-						function (success) {
+					function (success) {
+						if (success.data != null) {
 							console.log(success);
-							rotaObject = success.data[0];
+							rotaObject = success.data[success.data.length-1];
 							return rotaObject;
-						},
-						function (error) {
+						} else {
 							if (localStorageService != undefined && rotaObject.people == undefined) {
 								rotaObject = localStorageService.get("rota") || {};
 							}
 							return rotaObject;
 						}
+					},
+					function (error) {
+						if (localStorageService != undefined && rotaObject.people == undefined) {
+							rotaObject = localStorageService.get("rota") || {};
+						}
+						return rotaObject;
+					}
 				)
 			},
 			setRota: function(rota) {
@@ -34,14 +41,14 @@ angular.module("busilyApp")
 					localStorageService.set("rota", rota);
 				}
 
-				return $http.post("/api/rota", {o: rotaObject})
+				return $http.post("api/rota", {o: rotaObject})
 					.then(
-						function (success) {
+					function (success) {
 
-						},
-						function (error) {
+					},
+					function (error) {
 
-						}
+					}
 				)
 			}
 		};
