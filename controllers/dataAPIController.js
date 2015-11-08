@@ -5,7 +5,7 @@ module.exports = function(app, passport) {
 					if (err) res.json(null);
 					res.json(docs);
 			});
-		} else {e
+		} else {
 			res.json(null);
 		}
 	});
