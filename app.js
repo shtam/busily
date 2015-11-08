@@ -9,7 +9,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
-//var mailer = require('express-mailer');
+var mailer = require('express-mailer');
 
 //var routes = require('./routes/index');
 //var users = require('./routes/users');
@@ -35,6 +35,19 @@ app.use(session({ secret: 'triggerf00l' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+
+// mailer config
+mailer.extend(app, {
+	from: 'noreply@busily.co.uk',
+	host: '', // hostname 
+	secureConnection: true, // use SSL 
+	port: 465, // port for secure SMTP 
+	transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts 
+	auth: {
+		user: 'noreply@busily.co.uk',
+		pass: ''
+}
+});
 
 //app.use('/', routes);
 //app.use('/users', users);
