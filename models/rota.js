@@ -2,25 +2,25 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var rotaSchema = new mongoose.Schema ({
-	piss: String,
+	ownerid: String,
 	//location: {
 	//	display-name: String
 	//},
-	startdate: { type: Date },
+	startDate: { type: Date },
 	//end-date: { type: Date },
 	//repeat-pattern: { type: Boolean, default: false },
 	shifts: [
 		{
 			name: String,
-			starttime: [Number],
-			endtime: [Number],
+			startTime: [Number],
+			endTime: [Number],
 			colour: String,
-			Description: String
+			description: String
 		}
 	],
 	people: [
 		{
-			id: String,
+			id: Number,
 			name: String
 		}
 	],
