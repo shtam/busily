@@ -1,29 +1,29 @@
 module.exports = function(app, passport) {
-	app.get("/getrota", function(req, res) {
+	app.get("/api/rota", function(req, res) {
 		if (req.user) {
 			Rota.find({ ownerid: req.user._id }).exec(function(err, docs) {
-					if (err) return false;
-					return docs
+					if (err) res.json(null);
+					res.json(docs);
 			});
-		} else {
-			return: false;
+		} else {e
+			res.json(null);
 		}
 	});
-	app.get("/getuserrota/:userid", function(req, res) {
+	app.get("/api/userrota/:userid", function(req, res) {
 		if (req.params.userid) {
 			Rota.find({ ownerid: req.params.userid }).exec(function(err, docs) {
-					if (err) return false
-					return docs
+					if (err) res.json(null);
+					res.json(docs);
 			});
 		} else {
-			return: false;
+			res.json(null);
 		}
 	});
-	app.get("/getuser", function(req, res) {
+	app.get("/api/user", function(req, res) {
 		if (req.user) {
-			return req.user;
+			res.json(req.user);
 		} else {
-			return: false
+			res.json(null);
 		}
 	});
 }
