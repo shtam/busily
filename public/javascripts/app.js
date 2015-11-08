@@ -26,4 +26,14 @@ app.config(['$routeProvider', function ($routeProvider) {
 			templateUrl: 'views/rotaviewer.html',
 			controller: 'RotaViewer'
 		})
+		.when('/juniordoctorcalculator', {
+			templateURL: 'views/juniordoctorcalculator.html',
+			controller: 'JuniorDoctorCalculator'
+		})
 }]);
+
+app.config(function($mdDateLocaleProvider) {
+	$mdDateLocaleProvider.formatDate = function(date) {
+		return moment(date).format('YYYY-MM-DD');
+	};
+});

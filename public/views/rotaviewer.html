@@ -22,7 +22,7 @@
 
         <md-grid-tile ng-repeat="rota in finalRota.pattern" ng-style="{'background':finalRota.shifts[rota.v[finalRota.userID]].colour}">
             <md-grid-tile-header>
-                <h3>{{formatDate(finalRota.startDate, $index) | date}}</h3>
+                <h3>{{formatDate(finalRota.startDate, $index) | date : 'dd-MMM'}}</h3>
             </md-grid-tile-header>
             <md-grid-tile-footer ng-if="rota.v[finalRota.userID] > -1">
                 <h3>{{finalRota.shifts[rota.v[finalRota.userID]].name}}</h3>

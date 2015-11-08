@@ -33,9 +33,14 @@ app.controller("MainRotariser",
 	            } else {
 		            $scope.finalRota.userID = parseInt($scope.finalRota.userID);
 	            }
-	            RotaStorage.setRota($scope.finalRota, $http, localStorageService);
-                $scope.status = $scope.finalRota.startDate;
-	            $location.path('rotaviewer');
+	            RotaStorage.setRota($scope.finalRota).then(
+		            function (success) {
+			            $location.path('rotaviewer');
+		            },
+		            function (error) {
+			            // try again
+		            }
+	            );
 
               }, function () {
                 $scope.status = 'You cancelled the dialog.';

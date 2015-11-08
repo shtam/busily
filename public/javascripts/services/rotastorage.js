@@ -3,7 +3,7 @@
  */
 
 angular.module("busilyApp")
-	.factory("RotaStorage", function () {
+	.factory("RotaStorage", ['$http', 'localStorageService', function ($http, localStorageService) {
 
 		var rotaObject = {};
 		var config = {
@@ -11,29 +11,38 @@ angular.module("busilyApp")
 		};
 
 		return {
-			getRota: function($http, localStorageService) {
-				//if ($http != undefined && rotaObject.people == undefined) {
-					//$http.get("getrota").success(function(data) {
-					//	// fetch
-					//});
-				//} else
-				if (localStorageService != undefined && rotaObject.people == undefined) {
-					rotaObject = localStorageService.get("rota") || {};
-				}
-				return rotaObject;
+			getRota: function(userID, rotaID) {
+				return $http.get("api/rota")
+					.then(
+						function (success) {
+							console.log(success);
+							rotaObject = success.data[0];
+							return rotaObject;
+						},
+						function (error) {
+							if (localStorageService != undefined && rotaObject.people == undefined) {
+								rotaObject = localStorageService.get("rota") || {};
+							}
+							return rotaObject;
+						}
+				)
 			},
-			setRota: function(rota, $http, localStorageService) {
+			setRota: function(rota) {
 				rotaObject = rota;
 
-				if ($http != undefined) {
-					$http.post("saverota", {o: rotaObject}).success(function (data, status, headers) {
-						// save
-					});
-				}
 				if (localStorageService != undefined) {
 					localStorageService.set("rota", rota);
 				}
-				return rotaObject;
+
+				return $http.post("saverota", {o: rotaObject})
+					.then(
+						function (success) {
+
+						},
+						function (error) {
+
+						}
+				)
 			}
 		};
-	});
+	}]);

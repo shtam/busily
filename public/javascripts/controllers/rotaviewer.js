@@ -5,8 +5,12 @@ app.controller("RotaViewer",
 
 		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {
 
-			$scope.finalRota = RotaStorage.getRota($http, localStorageService);
-			console.log($scope.finalRota);
+			RotaStorage.getRota().then(
+				function (success) {
+					$scope.finalRota = success;
+					console.log($scope.finalRota);
+				}
+			);
 
 			$scope.formatDate = function (date, $index) {
 				var dateOut = new Date(date);
