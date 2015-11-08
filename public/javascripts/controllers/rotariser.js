@@ -188,12 +188,20 @@ app.controller("MainRotariser",
                         endTime = [parseInt(shiftTimeMatches[3]), parseInt(shiftTimeMatches[4])];
                       }
 
+	                  var skyGradient = "sky-gradient-00";
+                      if (startTime.length > 0) {
+	                      skyGradient = "sky-gradient-"+("0" + startTime[0]).slice(-2);
+                      }
+
                       finalRota.shifts.push({
                         name: shiftName,
                         startTime: startTime,
                         endTime: endTime,
-                        colour: '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6),
-                        description: ""
+                        //colour: '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6),
+                        colour: skyGradient,
+                        description: "",
+                        nonResident: false,
+                        holiday: false
                       });
                       shiftLookup[shiftName] = finalRota.shifts.length - 1;
                     }

@@ -1,4 +1,4 @@
-<div ng-controller="RotaViewer as rv">
+<div class="md-padding dialogdemoBasicUsage" id="popupContainer" ng-cloak="">
 
     <h1>Shifts</h1>
     <md-grid-list
@@ -6,21 +6,31 @@
             md-row-height-gt-md="1:1" md-row-height="4:3"
             md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
 
-        <md-grid-tile ng-repeat="shift in finalRota.shifts" ng-style="{'background':shift.colour}">
+        <md-grid-tile ng-repeat="shift in finalRota.shifts" ng-class="shift.colour">
+            <md-grid-tile-header>
+                <md-button class="md-icon-button" aria-label="Edit" ng-click="editShift($index)">
+                    <md-icon md-svg-icon="img/icons/edit-icon.svg" style="color:#fff"></md-icon>
+                </md-button>
+            </md-grid-tile-header>
             <md-grid-tile-footer>
                 <h3>{{shift.name}}</h3>
             </md-grid-tile-footer>
         </md-grid-tile>
+
     </md-grid-list>
 
     <h1>Rota Pattern</h1>
 
+    <h4>Start Date</h4>
+    <md-datepicker ng-model="finalRota.startDate" md-placeholder="Start Date"></md-datepicker>
+
+    <h4>Pattern</h4>
     <md-grid-list
             md-cols-gt-md="12" md-cols-sm="3" md-cols-md="8"
             md-row-height-gt-md="1:1" md-row-height="4:3"
             md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
 
-        <md-grid-tile ng-repeat="rota in finalRota.pattern" ng-style="{'background':finalRota.shifts[rota.v[finalRota.userID]].colour}">
+        <md-grid-tile ng-repeat="rota in finalRota.pattern" ng-class="finalRota.shifts[rota.v[finalRota.userID]].colour">
             <md-grid-tile-header>
                 <h3>{{formatDate(finalRota.startDate, $index) | date : 'dd-MMM'}}</h3>
             </md-grid-tile-header>
@@ -31,3 +41,55 @@
     </md-grid-list>
 
 </div>
+
+
+
+<script type="text/ng-template" id="edit-shift.dialog.html">
+    <md-dialog aria-label="Edit shift" ng-cloak>
+        <form>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Edit shift</h2>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content" layout="column">
+
+                    <md-input-container flex>
+                        <label>Shift Name</label>
+                        <input ng-model="ctrl.name">
+                    </md-input-container>
+                    <md-checkbox ng-model="ctrl.holiday" aria-label="Annual Leave">
+                        Annual Leave
+                    </md-checkbox>
+                    <md-checkbox ng-model="ctrl.nonResident" ng-if="!ctrl.holiday" aria-label="Non-Resident On-Call">
+                        Non-Resident On-call
+                    </md-checkbox>
+                    <md-input-container flex ng-if="!ctrl.holiday">
+                        <label>Start Time</label>
+                        <md-select aria-label="Start time" ng-model="ctrl.startTime">
+                            <md-option ng-repeat="time in ctrl.parent.times" value="{{$index}}">
+                                {{ctrl.parent.times[$index]}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container flex ng-if="!ctrl.holiday">
+                        <label>End Time</label>
+                        <md-select aria-label="End time" ng-model="ctrl.endTime">
+                            <md-option ng-repeat="time in ctrl.parent.times" value="{{$index}}">
+                                {{ctrl.parent.times[$index]}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+            </md-dialog-content>
+
+            <div class="md-actions" layout="row">
+                <md-button ng-click="ctrl.parent.hideEditShift(ctrl)" class="md-primary">
+                    Save changes
+                </md-button>
+            </div>
+        </form>
+    </md-dialog>
+</script>

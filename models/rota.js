@@ -6,7 +6,9 @@ var sShifts = new mongoose.Schema ({
 	startTime: [Number],
 	endTime: [Number],
 	colour: String,
-	description: String
+	description: String,
+	nonResident: Boolean,
+	holiday: Boolean
 });
 
 var sPatterns = new mongoose.Schema ({
