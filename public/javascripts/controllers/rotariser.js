@@ -1,8 +1,8 @@
 var app = angular.module("busilyApp");
 
 app.controller("MainRotariser",
-    ["$scope", "$mdDialog", "$location", "GridObject", "localStorageService", "RotaStorage", "findincremental", "datefinder", "RosterObject",
-      function ($scope, $mdDialog, $location, GridObject, localStorageService, RotaStorage, findincremental, datefinder, RosterObject) {
+    ["$scope", "$mdDialog", "$location", "$http", "GridObject", "localStorageService", "RotaStorage", "findincremental", "datefinder", "RosterObject",
+      function ($scope, $mdDialog, $location, $http, GridObject, localStorageService, RotaStorage, findincremental, datefinder, RosterObject) {
 
         function readFailDialog(ev) {
           $mdDialog.show(
@@ -28,9 +28,12 @@ app.controller("MainRotariser",
             clickOutsideToClose: true
           })
               .then(function (answer) {
-	            if ($scope.finalRota.userID == -1)
-	                $scope.finalRota.userID = 0;
-	            RotaStorage.setRota($scope.finalRota, localStorageService);
+	            if ($scope.finalRota.userID == -1) {
+		            $scope.finalRota.userID = 0;
+	            } else {
+		            $scope.finalRota.userID = parseInt($scope.finalRota.userID);
+	            }
+	            RotaStorage.setRota($scope.finalRota, $http, localStorageService);
                 $scope.status = $scope.finalRota.startDate;
 	            $location.path('rotaviewer');
 

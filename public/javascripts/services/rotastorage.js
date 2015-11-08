@@ -6,17 +6,29 @@ angular.module("busilyApp")
 	.factory("RotaStorage", function () {
 
 		var rotaObject = {};
+		var config = {
+			headers: {}
+		};
 
 		return {
-			getRota: function(localStorageService) {
-				if (localStorageService != undefined && rotaObject.people == undefined) {
+			getRota: function($http, localStorageService) {
+				if ($http != undefined && rotaObject.people == undefined) {
+					$http.get("getrota").success(function(data) {
+						// fetch
+					});
+				} else if (localStorageService != undefined && rotaObject.people == undefined) {
 					rotaObject = localStorageService.get("rota") || {};
 				}
 				return rotaObject;
 			},
-			setRota: function(rota, localStorageService) {
+			setRota: function(rota, $http, localStorageService) {
 				rotaObject = rota;
 
+				if ($http != undefined) {
+					$http.post("saverota", {o: rotaObject}, config).success(function (data, status, headers) {
+						// save
+					});
+				}
 				if (localStorageService != undefined) {
 					localStorageService.set("rota", rota);
 				}
