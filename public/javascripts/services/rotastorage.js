@@ -12,11 +12,12 @@ angular.module("busilyApp")
 
 		return {
 			getRota: function($http, localStorageService) {
-				if ($http != undefined && rotaObject.people == undefined) {
-					$http.get("getrota").success(function(data) {
-						// fetch
-					});
-				} else if (localStorageService != undefined && rotaObject.people == undefined) {
+				//if ($http != undefined && rotaObject.people == undefined) {
+					//$http.get("getrota").success(function(data) {
+					//	// fetch
+					//});
+				//} else
+				if (localStorageService != undefined && rotaObject.people == undefined) {
 					rotaObject = localStorageService.get("rota") || {};
 				}
 				return rotaObject;
@@ -25,7 +26,7 @@ angular.module("busilyApp")
 				rotaObject = rota;
 
 				if ($http != undefined) {
-					$http.post("saverota", {o: rotaObject}, config).success(function (data, status, headers) {
+					$http.post("saverota", {o: rotaObject}).success(function (data, status, headers) {
 						// save
 					});
 				}

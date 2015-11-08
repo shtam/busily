@@ -153,10 +153,14 @@ app.controller("MainRotariser",
                     winningDay = rostObj.winners[0].dates[0].values[0].parsed;
                   }
 
-                  finalRota.startDate.setFullYear(
+                  finalRota.startDate = new Date(
                       rostObj.winners[0].stats.date.foundMonthsYears.years,
                       rostObj.winners[0].stats.date.foundMonthsYears.months[0]-1,
-                      winningDay
+                      winningDay,
+	                  0,
+	                  0,
+	                  0,
+	                  0
                   );
                 }
 
@@ -217,17 +221,17 @@ app.controller("MainRotariser",
 
                 // could use median number of days for all people - for now let's just use the number of days the first person has
                 for (var lengthInDays = 0; lengthInDays < maxDays; lengthInDays++) {
-                  finalRota.pattern.push([]);
+                  finalRota.pattern.push({v:[]}); // mongo doesn't allow nested arrays, but you can have array->object->array...
                   for (peepCount = 0; peepCount < finalRota.people.length; peepCount++) {
 
                     peepName = finalRota.people[peepCount].name;
-                    finalRota.pattern[lengthInDays][peopleLookup[peepName]] = -1; // assume not working
+                    finalRota.pattern[lengthInDays].v[peopleLookup[peepName]] = -1; // assume not working
 
                     if (peeps[peepName].length > lengthInDays) {
                       shiftName = peeps[peepName][lengthInDays][1];
 
                       if (shiftName != "") { // blank shift
-	                      finalRota.pattern[lengthInDays][peopleLookup[peepName]] = shiftLookup[shiftName];
+	                      finalRota.pattern[lengthInDays].v[peopleLookup[peepName]] = shiftLookup[shiftName];
                       }
                     }
                   }
