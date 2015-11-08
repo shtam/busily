@@ -16,8 +16,11 @@ module.exports = function(app, passport) {
 			o.ownerid = req.user._id;
 			var newrota = new Rota(o);
 			newrota.save(function (err) {
-				  if (err) console.log(err);
+				if (err) res.status(500);
+				res.status(201);
 			});
+		} else {
+			res.status(401);
 		}
 	});
 	app.get("/api/userrota/:userid", function(req, res) {
