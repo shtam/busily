@@ -1,6 +1,18 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var sShifts = new mongoose.Schema ({
+	name: String,
+	startTime: [Number],
+	endTime: [Number],
+	colour: String,
+	description: String
+});
+
+var sPatterns = new mongoose.Schema ({
+	v: [Number]
+});
+
 var rotaSchema = new mongoose.Schema ({
 	ownerid: String,
 	//location: {
@@ -9,24 +21,14 @@ var rotaSchema = new mongoose.Schema ({
 	startDate: { type: Date },
 	//end-date: { type: Date },
 	//repeat-pattern: { type: Boolean, default: false },
-	shifts: [
-		{
-			name: String,
-			startTime: [Number],
-			endTime: [Number],
-			colour: String,
-			description: String
-		}
-	],
+	shifts: [sShifts],
 	people: [
 		{
 			id: Number,
 			name: String
 		}
 	],
-	pattern: [
-		[Number]
-	]
+	pattern: [sPatterns]
 });
 
 Rota = mongoose.model('Rota', rotaSchema);
