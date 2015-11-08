@@ -34,7 +34,7 @@ angular.module("busilyApp")
 					localStorageService.set("rota", rota);
 				}
 
-				return $http.post("saverota", {o: rotaObject})
+				return $http.post("/api/rota", {o: rotaObject})
 					.then(
 						function (success) {
 
