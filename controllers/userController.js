@@ -23,21 +23,21 @@ module.exports = function(app, passport) {
 			if(!user) {
 				res.render("forgotten", { message : "Email address is not regsitered." });
 			} else if (user) {
-				var newpw = Math.random().toString(36).slice(-8);
-				user.password = user.generateHash(newpw);
-				user.save(function(err)
+				var newhash = new Passhash();
+				newhash.token = Math.random().toString(36).slice(-8);
+				newhash.userid = user._id;
+				newhash.save(function(err)
 				{
 					var o = {};
 					o.to = user.email;
 					o.subject = "Busily password reset";
-					o.password = newpw;
-					console.log(o);
+					o.token = newhash.token;
 					app.mailer.send('pwmail', o, function(err)
 					{
 						if(err){
 							console.log(err);return
 						}
-						res.render("unforgotten", { message : "A new password has been emailed to you." });
+						res.render("unforgotten", { message : "Instructions for resetting your password have been emailed to you." });
 					});
 				});
 			}
