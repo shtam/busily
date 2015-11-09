@@ -46,12 +46,11 @@ module.exports = function(app, passport) {
 
 	app.get("/newpassword/:token", function(req, res)
 	{
-		Passhash.findOne( { token: req.params.token } ).exec(function(err)
+		Passhash.findOne( { token: req.params.token } ).exec(function(err, p)
 		{
-			if (err) res.redirect("/");
+			if (err || !p) res.redirect("/");
 			res.render("newpass", { token: req.params.token, message: ""});	
 		});
-		res.redirect("/");
 	});
 	app.post("/newpassword", function(req, res)
 	{
