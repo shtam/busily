@@ -6,7 +6,7 @@ append content
 			.hello
 				if (message.length > 0)
 					div#message=message
-				form(action="/newpass" method="post")
+				form(action="/newpassword" method="post")
 					label Password:
 					input(type="password" name="password")
 					input(type="hidden" name="token" value=token)

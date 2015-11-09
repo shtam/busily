@@ -44,11 +44,11 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.get("/newpass/:token", function(req, res)
+	app.get("/newpassword/:token", function(req, res)
 	{
 		res.render("newpass", { token: req.params.token });	
 	});
-	app.post("/newpass", function(req, res)
+	app.post("/newpassword", function(req, res)
 	{
 		Passhash.findOne( { token: req.body.token } ).exec(function(err, passhash)
 		{
