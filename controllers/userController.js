@@ -46,7 +46,7 @@ module.exports = function(app, passport) {
 
 	app.get("/newpassword/:token", function(req, res)
 	{
-		res.render("newpass", { token: req.params.token });	
+		res.render("newpass", { token: req.params.token, message: ""});	
 	});
 	app.post("/newpassword", function(req, res)
 	{
