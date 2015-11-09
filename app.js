@@ -112,6 +112,7 @@ mongoose.connect('mongodb://localhost/busily');
 
 require('./models/user');
 require('./models/rota');
+require('./models/newpass');
 require('./controllers/rotainputController')(app, passport);
 require('./controllers/dataAPIController')(app, passport);
 require('./controllers/getdataController')(app, passport);
