@@ -58,8 +58,10 @@ module.exports = function(app, passport) {
 				user.password = user.generateHash(req.body.password);
 				user.save(function(err)
 				{
-					Passhash.remove( { userid: passhash.userid } );
-					res.redirect("/login");
+					Passhash.remove( { userid: passhash.userid } ).exec(err)
+					{
+						res.redirect("/login");
+					});
 				});
 			});
 		});
