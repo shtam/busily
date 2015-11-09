@@ -32,6 +32,18 @@ module.exports = function(app, passport) {
 			res.status(401).end();
 		}
 	});
+	app.post("/api/rota/delete/:rotaid", function(req, res)
+	{
+		if (req.user) {
+			o = req.body.o;
+			Rota.remove( { _id: req.params.rotaid, ownerid: req.user._id }, o, function (err) {
+				if (err) res.status(500).end();
+				res.status(201).end();
+			});
+		} else {
+			res.status(401).end();
+		}
+	});
 	app.post("/api/rota/", function(req, res)
 	{
 		if (req.user) {
