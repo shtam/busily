@@ -24,7 +24,7 @@ module.exports = function(app, passport) {
 				res.render("forgotten", { message : "Email address is not regsitered." });
 			} else if (user) {
 				var newhash = new Passhash();
-				newhash.token = Math.random().toString(36).slice(-8);
+				newhash.token = Math.random().toString(36).slice(2);
 				newhash.userid = user._id;
 				newhash.save(function(err)
 				{
