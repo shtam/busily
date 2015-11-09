@@ -1,0 +1,14 @@
+extends layout
+append content
+	#content
+		div.central
+			h1 Enter new password
+			.hello
+				if (message.length > 0)
+					div#message=message
+				form(action="/newpass" method="post")
+					label Password:
+					input(type="password" name="password")
+					input(type="hidden" name="token" value=token)
+					br
+					button(type="submit") Set password 

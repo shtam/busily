@@ -44,6 +44,27 @@ module.exports = function(app, passport) {
 		});
 	});
 
+	app.get("/newpass/:token", function(req, res)
+	{
+		res.render("newpass", { token: req.params.token });	
+	});
+	app.post("/newpass", function(req, res)
+	{
+		Passhash.findOne( { token: req.body.token } ).exec(function(err, passhash)
+		{
+			User.findOne( { _id: passhash.userid } ).exec(function(err, user)
+			{
+				if (err) res.redirect("/");
+				user.password = user.generateHash(req.body.password);
+				user.save(function(err)
+				{
+					Passhash.remove( { userid: passhash.userid } );
+					res.redirect("/login");
+				});
+			});
+		});
+	});
+
 	app.get("/signup", function(req, res)
 	{
 		res.render("signup", { message : req.flash("signupMessage") });
