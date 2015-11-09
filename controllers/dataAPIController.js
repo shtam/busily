@@ -35,8 +35,7 @@ module.exports = function(app, passport) {
 	app.post("/api/rota/delete/:rotaid", function(req, res)
 	{
 		if (req.user) {
-			o = req.body.o;
-			Rota.remove( { _id: req.params.rotaid, ownerid: req.user._id }, o, function (err) {
+			Rota.remove( { _id: req.params.rotaid, ownerid: req.user._id }, function (err) {
 				if (err) res.status(500).end();
 				res.status(201).end();
 			});
