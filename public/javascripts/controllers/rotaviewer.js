@@ -5,14 +5,115 @@ app.controller("RotaViewer",
 
 		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {
 
+			var dbRota = {};
+
 			RotaStorage.getRota().then(
 				function (success) {
 					$scope.finalRota = success;
 					$scope.finalRota.startDate = new Date($scope.finalRota.startDate);
 
-					console.log($scope.finalRota);
+					dbRota = $scope.finalRota;
+
+					console.log(dbRota);
+					$scope.prepareRota();
 				}
 			);
+
+			// returns overlap between [a1,a2] and [b1,b2]
+			function getTimeOverlap(a1,a2,b1,b2) {
+				if (b1 > b2) {
+					return getTimeOverlap(a1,a2,0,b2) + getTimeOverlap(a1,a2,b1,24);
+				}
+				return Math.max(Math.min(a2,b2) - Math.max(a1,b1), 0);
+			}
+
+			function getTimeCategories(a,b,day) {
+				var totalTime = 0;
+				var plainTime = 0;  // 7am-10pm Mon-Fri, 7am-7pm Sat-Sun
+				var satTime = 0;    // 7pm-10pm Sat
+				var sunTime = 0;    // 7am-10pm Sun
+				var nightTime = 0;  // 10pm-7am
+
+				var plainTimeStart = 7;
+				var plainTimeEnd = 22;
+				var nightTimeStart = 22;
+				var nightTimeEnd = 7;
+				var satTimeStart = 19;
+				var satTimeEnd = 22;
+				var sunTimeStart = 7;
+				var sunTimeEnd = 22;
+				if (day == 0) plainTimeEnd = 7;
+				if (day == 6) plainTimeEnd = 19;
+
+				if (a <= b) {
+					totalTime = b - a;
+					plainTime = getTimeOverlap(a,b, plainTimeStart,plainTimeEnd);
+					nightTime = getTimeOverlap(a,b, nightTimeStart,nightTimeEnd);
+					if (day == 6) satTime = getTimeOverlap(a,b, satTimeStart,satTimeEnd);
+					if (day == 0) sunTime = getTimeOverlap(a,b, sunTimeStart,sunTimeEnd);
+
+					return {
+						totalTime: totalTime,
+						plainTime: plainTime,
+						nightTime: nightTime,
+						satTime: satTime,
+						sunTime: sunTime
+					};
+				} else {
+					var early = getTimeCategories(0, b, (day+1)%7);
+					var late = getTimeCategories(a, 24, day);
+
+					return {
+						totalTime: early.totalTime + late.totalTime,
+						plainTime: early.plainTime + late.plainTime,
+						nightTime: early.nightTime + late.nightTime,
+						satTime: early.satTime + late.satTime,
+						sunTime: early.sunTime + late.sunTime
+					};
+				}
+			}
+
+			$scope.prepareRota = function() {
+				// expand format stored in DB into something a bit more useful
+				// [ {date:, day:, shiftType: }, ... ]
+
+				var newRota = dbRota.pattern.map(function(elem, index) {
+					var newDate = new Date(dbRota.startDate);
+					newDate.setDate(newDate.getDate() + index);
+					var day = newDate.getDay(); // Sunday = 0, Saturday = 6
+					var onCall = false;
+
+					var timeCategories = getTimeCategories(0,0,day);
+
+					var shift = elem.v[dbRota.userID];
+					var shiftType = {};
+
+					if (shift > -1) {
+						shiftType = dbRota.shifts[shift];
+
+						onCall = (shiftType.nonResident) ? true : false;
+
+						if (!shiftType.holiday && shiftType.startTime.length > 0 && shiftType.endTime.length > 0) {
+
+							var startTime = shiftType.startTime[0] + (shiftType.startTime[1] == 30 ? 0.5 : 0);
+							var endTime = shiftType.endTime[0] + (shiftType.endTime[1] == 30 ? 0.5 : 0);
+
+							timeCategories = getTimeCategories(startTime, endTime, day);
+						}
+					}
+
+					return {
+						date: newDate,
+						day: day,
+						timeCategories: timeCategories,
+						onCall: onCall,
+						shift: shift,
+						shiftType: shiftType
+					}
+				});
+
+				console.log(newRota);
+			};
 
 			$scope.formatDate = function (date, $index) {
 				var dateOut = new Date(date);
@@ -22,6 +123,21 @@ app.controller("RotaViewer",
 
 
 			$scope.times = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
+
+			function getTimeStr(h,m) {
+				return time = h*2 + (m == 30) ? 1 : 0;
+			}
+			function getTimeNum(v) {
+				var h = parseInt(v);
+				var m = 0;
+
+				if (h % 2) {
+					m = 30;
+					h -= 1;
+				}
+				h /= 2;
+				return  h;
+			}
 
 			$scope.editShift = function(shiftID) {
 
