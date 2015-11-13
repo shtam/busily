@@ -10,6 +10,7 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
 var mailer = require('express-mailer');
+var nodalytics = require('nodalytics');
 
 //var routes = require('./routes/index');
 //var users = require('./routes/users');
@@ -117,6 +118,9 @@ require('./controllers/rotainputController')(app, passport);
 require('./controllers/dataAPIController')(app, passport);
 require('./controllers/getdataController')(app, passport);
 require('./controllers/userController')(app, passport);
+
+
+app.use(nodalytics('UA-70082549-1'));
 
 
 // catch 404 and forward to error handler
