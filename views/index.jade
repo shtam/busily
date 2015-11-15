@@ -11,15 +11,12 @@ head
   body(layout='column', ng-controller='AppController as vm')
     md-toolbar(layout='row')
       .md-toolbar-tools
-        md-button.md-icon-button(ng-click="vm.toggleSidenav('left')", hide-gt-sm='')
-          md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
 
-        h1 Angular Material: &nbsp; Starter CodePen #{title}
+        h1 Busily -  #{title}
+        span(flex='')
+        login-toolbar
 
     div(layout='row', flex='')
-      md-sidenav.md-sidenav-left.md-whiteframe-4dp(layout='column', md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')")
-        md-button.md-accent Button 1
-        md-button.md-accent Button 2
 
       #content(layout='column', flex='')
         md-content.md-padding(layout='column', flex='')
@@ -35,6 +32,7 @@ head
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js')
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js')
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js')
+    script(src='https://cdn.jsdelivr.net/angularjs/1.4.7/i18n/angular-locale_en-gb.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.2.2/angular-local-storage.min.js')
     script(src='https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc1/angular-material.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js')

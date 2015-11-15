@@ -4,17 +4,13 @@ app.controller("MainRotariser",
     ["$scope", "$mdDialog", "$location", "$http", "GridObject", "localStorageService", "RotaStorage", "findincremental", "datefinder", "RosterObject",
       function ($scope, $mdDialog, $location, $http, GridObject, localStorageService, RotaStorage, findincremental, datefinder, RosterObject) {
 
-        function readFailDialog(ev) {
-          $mdDialog.show(
-              $mdDialog.alert()
-                  .parent(angular.element(document.querySelector('#popupContainer')))
-                  .clickOutsideToClose(true)
-                  .title("It didn't work :-(")
-                  .content("Your rota is too damn complicated. Try enter it manually.")
-                  .ariaLabel("Bad news dialog")
-                  .ok("Manual Entry")
-                  .targetEvent(ev)
-          );
+        $scope.troubleshootDialog = function (ev) {
+          $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'rota-troubleshoot.dialog.html',
+            targetEvent: ev,
+            clickOutsideToClose:true
+          })
         }
 
         function readSuccessDialog(ev) {
@@ -139,8 +135,6 @@ app.controller("MainRotariser",
                 var colNames = [];
                 for (var cols = 0; cols <= grid.maxCol; cols++)
                   colNames.push(cols);
-//console.log(rostObj.winners);
-
 
                 var finalRota = {
                   shifts: [],
@@ -256,58 +250,18 @@ app.controller("MainRotariser",
 
                 $scope.finalRota = finalRota;
 
-                console.log(finalRota);
 
+                // hooray! open popup to continue
                 readSuccessDialog();
 
-                /*            var winResults = [];
-                 for (var winRow=0; winRow<=grid.maxRow; winRow++) {
-                 winResults[winRow] = [];
-                 for (var winCol=0; winCol<=grid.maxCol; winCol++) {
-                 winResults[winRow][winCol] = {
-                 value: grid.grid[winRow][winCol],
-                 class: ""
-                 };
-                 }
-                 }
-                 for (var wins=0; wins<rostObj.winners.length; wins++) {
-                 for (winRow=rostObj.winners[wins].body.startRow; winRow<=rostObj.winners[wins].body.endRow; winRow++) {
-                 for (winCol=rostObj.winners[wins].body.startCol; winCol<=rostObj.winners[wins].body.endCol; winCol++) {
-                 winResults[winRow][winCol].class = "rotabody";
-                 }
-                 }
-                 if (rostObj.winners[wins].edge.startRow >= 0 && rostObj.winners[wins].edge.startCol >= 0) {
-                 for (winRow = rostObj.winners[wins].edge.startRow; winRow <= rostObj.winners[wins].edge.endRow; winRow++) {
-                 for (winCol = rostObj.winners[wins].edge.startCol; winCol <= rostObj.winners[wins].edge.endCol; winCol++) {
-                 winResults[winRow][winCol].class = "rotaedge";
-                 }
-                 }
-                 }
-                 for (var winDates=0; winDates<rostObj.winners[wins].dates.length; winDates++) {
-                 for (winRow=rostObj.winners[wins].dates[winDates].startRow; winRow<=rostObj.winners[wins].dates[winDates].endRow; winRow++) {
-                 for (winCol=rostObj.winners[wins].dates[winDates].startCol; winCol<=rostObj.winners[wins].dates[winDates].endCol; winCol++) {
-                 winResults[winRow][winCol].class = "rotadate";
-                 }
-                 }
-                 }
-                 }
-
-
-                 var gridDisplay = {
-                 rows:winResults,
-                 cols:colNames,
-                 };
-
-                 $scope.importedRota = gridDisplay;
-                 */
               } else { // no winners
-                readFailDialog();
+                $scope.troubleshootDialog();
               }
             } else {
-              readFailDialog();
+              $scope.troubleshootDialog();
             }
           } else {
-            readFailDialog();
+            $scope.troubleshootDialog();
           }
         }
 

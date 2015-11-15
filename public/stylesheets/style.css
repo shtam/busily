@@ -1,12 +1,3 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
 .md-toolbar-tools h1 {
   font-size: inherit;
   font-weight: inherit;
@@ -19,12 +10,44 @@ md-sidenav.md-locked-open {
   max-width: 150px !important;
 }
 
-.rotabody {
-  background-color: #ff0000;
+.home section {
+  background: #f7f7f7;
+  border-radius: 3px;
+  text-align: center;
+  margin: 1em;
+  position: relative !important;
+  padding-bottom: 10px; }
+.home md-content {
+  margin-right: 7px; }
+.home section .md-button {
+  margin-top: 16px;
+  margin-bottom: 16px; }
+
+
+
+
+table.salarytable, th, td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 10px;
+  margin: 10px;
 }
-.rotaedge {
-  background-color: #0000ff;
+table.salarytable tr:nth-child(odd) {
+  background-color: #f1f1f1;
 }
-.rotadate {
-  background-color: #00ff00;
+table.salarytable tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+table.salarytable td.currency {
+  text-align:right;
+}
+table.salarytable td.better {
+  background: #00ff00;
+}
+table.salarytable td.worse {
+  background: #ff0000;
+}
+table.salarytable tr.total {
+  font-weight: bold;
 }

@@ -6,6 +6,7 @@ angular.module("busilyApp")
 	.factory("RotaStorage", ['$http', 'localStorageService', function ($http, localStorageService) {
 
 		var rotaObject = {};
+		var rotaStats = {};
 		var config = {
 			headers: {}
 		};
@@ -16,7 +17,6 @@ angular.module("busilyApp")
 					.then(
 					function (success) {
 						if (success.data != null) {
-							console.log(success);
 							rotaObject = success.data[success.data.length-1];
 							return rotaObject;
 						} else {
@@ -50,6 +50,18 @@ angular.module("busilyApp")
 
 					}
 				)
+			},
+			getRotaStats: function(userID, rotaID) {
+				if (localStorageService != undefined && rotaStats.weeks == undefined) {
+					rotaStats = localStorageService.get("rotaStats") || {};
+				}
+				return rotaStats;
+			},
+			setRotaStats: function(stats) {
+				rotaStats = stats;
+				if (localStorageService != undefined) {
+					localStorageService.set("rotaStats", rotaStats);
+				}
 			}
 		};
 	}]);

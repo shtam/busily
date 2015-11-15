@@ -1,1 +1,132 @@
-<div>hello</div>
+<div id="popupContainer" ng-clock="" class="md-inline-form">
+
+    <p><a ng-href="#/">Home</a> &gt; <a ng-href="#/rotaviewer">Edit Rota</a> &gt; Salary Calculator</p>
+
+    <md-content layout-padding>
+        <md-input-container flex>
+            <label>Current grade</label>
+            <md-select aria-label="Current Grade" ng-model="currentGrade" ng-change="recalculate()">
+                <md-option ng-repeat="grade in grades" value="{{$index}}">
+                    {{grade}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Current basic pay</label>
+            <md-select aria-label="Current Basic Pay" ng-model="currentPay" ng-change="recalculate()">
+                <md-option ng-repeat="(key, value) in existingPay" value="{{key}}">
+                    {{key+" "+(value[1] | currency)}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Current banding</label>
+            <md-select aria-label="Current Banding" ng-model="currentBand" ng-change="recalculate()">
+                <md-option ng-repeat="(key, value) in oldBands" value="{{key}}">
+                    {{key}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Deanery</label>
+            <md-select ng-model="currentDeanery" ng-change="recalculate()">
+                <md-option ng-repeat="deanery in deaneries" value="{{$index}}">
+                    {{deanery}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>What's your specialty?</label>
+            <md-select aria-label="Specialty" ng-model="currentSpecialty" ng-change="recalculate()">
+                <md-option ng-repeat="specialty in specialties" value="{{$index}}">
+                    {{specialty}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>What's your sub-specialty?</label>
+            <md-select aria-label="Sub-specialty" ng-model="currentSubSpecialty" ng-change="recalculate()" ng-disabled="subSpecialties[specialties[currentSpecialty]] == undefined">
+                <md-option ng-repeat="sub in subSpecialties[specialties[currentSpecialty]]" value="{{$index}}">
+                    {{sub}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <h2>Gross salary comparison</h2>
+
+        <table class="salarytable">
+            <tbody>
+            <tr class="total">
+                <td>&nbsp;</td>
+                <td>Current Package</td>
+                <td>Proposed Package</td>
+            </tr>
+            <tr>
+                <td>Basic Pay</td>
+                <td class="currency">{{currentPayValue | currency}}</td>
+                <td class="currency">{{currentNodePay | currency}}</td>
+            </tr>
+            <tr>
+                <td>Banding</td>
+                <td class="currency">{{currentBandValue | currency}}</td>
+                <td class="currency">N/A</td>
+            </tr>
+            <tr>
+                <td>London Weighting</td>
+                <td class="currency">{{currentLondonValue | currency}}</td>
+                <td class="currency">{{currentLondonValue | currency}}</td>
+            </tr>
+            <tr>
+                <td>Additional Rostered Hours ({{rotaSummary.weeklyStats.additionalRosteredHours | number}})</td>
+                <td class="currency">N/A</td>
+                <td class="currency">{{currentExtraHoursValue.additionalBasicHours | currency}}</td>
+            </tr>
+            <tr>
+                <td>Saturday Hours ({{rotaSummary.weeklyStats.saturdayHours | number}})</td>
+                <td class="currency">N/A</td>
+                <td class="currency">{{currentExtraHoursValue.satHours | currency}}</td>
+            </tr>
+            <tr>
+                <td>Sunday Hours ({{rotaSummary.weeklyStats.sundayHours | number}})</td>
+                <td class="currency">N/A</td>
+                <td class="currency">{{currentExtraHoursValue.sunHours | currency}}</td>
+            </tr>
+            <tr>
+                <td>Night Hours ({{rotaSummary.weeklyStats.nightHours | number}})</td>
+                <td class="currency">N/A</td>
+                <td class="currency">{{currentExtraHoursValue.nightHours | currency}}</td>
+            </tr>
+            <tr>
+                <td>On-Call Allowance ({{currentOnCallAllowanceValue}}%)</td>
+                <td class="currency">N/A</td>
+                <td class="currency">{{currentOnCallAllowanceValue | currency}}</td>
+            </tr>
+            <tr>
+                <td>Programme Premia</td>
+                <td class="currency">N/A</td>
+                <td class="currency">{{currentPremia | currency}}</td>
+            </tr>
+            <tr class="total">
+                <td>TOTAL</td>
+                <td class="currency">{{currentPackage | currency}}</td>
+                <td class="currency">{{proposedPackage | currency}}</td>
+            </tr>
+            <tr class="total">
+                <td>Difference</td>
+                <td class="currency">&nbsp;</td>
+                <td class="currency" ng-class="differenceStyle">
+                    {{differenceValue | currency}}<br />
+                    ({{differencePercent | number:1}}%)
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </md-content>
+
+</div>

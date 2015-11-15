@@ -6,6 +6,7 @@ app.controller("RotaViewer",
 		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {
 
 			var dbRota = {};
+			var rotaStats = {};
 
 			RotaStorage.getRota().then(
 				function (success) {
@@ -14,7 +15,6 @@ app.controller("RotaViewer",
 
 					dbRota = $scope.finalRota;
 
-					console.log(dbRota);
 					$scope.prepareRota();
 				}
 			);
@@ -82,6 +82,7 @@ app.controller("RotaViewer",
 					newDate.setDate(newDate.getDate() + index);
 					var day = newDate.getDay(); // Sunday = 0, Saturday = 6
 					var onCall = false;
+					var holiday = false;
 
 					var timeCategories = getTimeCategories(0,0,day);
 
@@ -92,8 +93,9 @@ app.controller("RotaViewer",
 						shiftType = dbRota.shifts[shift];
 
 						onCall = (shiftType.nonResident) ? true : false;
+						holiday = (shiftType.holiday) ? true : false;
 
-						if (!shiftType.holiday && shiftType.startTime.length > 0 && shiftType.endTime.length > 0) {
+						if (!holiday && shiftType.startTime.length > 0 && shiftType.endTime.length > 0) {
 
 							var startTime = shiftType.startTime[0] + (shiftType.startTime[1] == 30 ? 0.5 : 0);
 							var endTime = shiftType.endTime[0] + (shiftType.endTime[1] == 30 ? 0.5 : 0);
@@ -107,13 +109,79 @@ app.controller("RotaViewer",
 						day: day,
 						timeCategories: timeCategories,
 						onCall: onCall,
+						holiday: holiday,
 						shift: shift,
 						shiftType: shiftType
 					}
 				});
 
-				console.log(newRota);
+				var rotaSummary = newRota.reduce(function (prev, cur, index) {
+					if (index == 1) {
+						return {
+							firstDate: prev.date,
+							lastDate: cur.date,
+							totalDays: 2,
+							workDays: (prev.timeCategories.totalTime > 0 ? 1 : 0) + (cur.timeCategories.totalTime > 0 ? 1 : 0),
+							onCallDays: (prev.onCall ? 1 : 0) + (cur.onCall ? 1 : 0),
+							holidayDays: (prev.holiday ? 1 : 0) + (cur.holiday ? 1 : 0),
+							timeCategories: {
+								totalTime: prev.timeCategories.totalTime + cur.timeCategories.totalTime,
+								plainTime: prev.timeCategories.plainTime + cur.timeCategories.plainTime,
+								nightTime: prev.timeCategories.nightTime + cur.timeCategories.nightTime,
+								satTime: prev.timeCategories.satTime + cur.timeCategories.satTime,
+								sunTime: prev.timeCategories.sunTime + cur.timeCategories.sunTime
+							}
+						}
+					}
+
+					return {
+						//hoursPerWeek: /**/,
+						//hoursPerWeekMax: /**/,
+						//hoursPerWeekMin: /**/,
+						firstDate: prev.firstDate,
+						lastDate: cur.date,
+						totalDays: prev.totalDays + 1,
+						workDays: prev.workDays + (cur.timeCategories.totalTime > 0 ? 1 : 0),
+						onCallDays: prev.onCallDays + (cur.onCall ? 1 : 0),
+						holidayDays: prev.holidayDays + (cur.holiday ? 1 : 0),
+						timeCategories: {
+							totalTime: prev.timeCategories.totalTime + cur.timeCategories.totalTime,
+							plainTime: prev.timeCategories.plainTime + cur.timeCategories.plainTime,
+							nightTime: prev.timeCategories.nightTime + cur.timeCategories.nightTime,
+							satTime: prev.timeCategories.satTime + cur.timeCategories.satTime,
+							sunTime: prev.timeCategories.sunTime + cur.timeCategories.sunTime
+						}
+					}
+				});
+
+				rotaSummary.weeklyStats = calculateWeeklyStats(rotaSummary);
+
+				RotaStorage.setRotaStats(rotaSummary);
+				console.log(rotaSummary);
 			};
+
+			function calculateWeeklyStats(rotaSummary) {
+
+				var weeks = rotaSummary.totalDays / 7;
+				var totalHours = rotaSummary.timeCategories.totalTime / weeks;
+				var additionalRosteredHours = (rotaSummary.timeCategories.plainTime > 0) ? Math.max(0, rotaSummary.timeCategories.plainTime / weeks - 40) : 0;
+				var saturdayHours = (rotaSummary.timeCategories.satTime > 0) ? rotaSummary.timeCategories.satTime / weeks : 0;
+				var sundayHours = (rotaSummary.timeCategories.sunTime > 0) ? rotaSummary.timeCategories.sunTime / weeks : 0;
+				var nightHours = (rotaSummary.timeCategories.nightTime > 0) ? rotaSummary.timeCategories.nightTime / weeks : 0;
+				var onCallDays = (rotaSummary.onCallDays > 0) ? rotaSummary.totalDays / rotaSummary.onCallDays : 0;
+
+				var weeklyStats = {
+					weeks: weeks,
+					totalHours: totalHours,
+					additionalRosteredHours: additionalRosteredHours,
+					saturdayHours: saturdayHours,
+					sundayHours: sundayHours,
+					nightHours: nightHours,
+					onCallDays: onCallDays
+				}
+
+				return weeklyStats;
+			}
 
 			$scope.formatDate = function (date, $index) {
 				var dateOut = new Date(date);
@@ -169,7 +237,7 @@ app.controller("RotaViewer",
 				})
 				.then(
 					function (success) {
-
+						$scope.prepareRota();
 					},
 					function (error) {
 						$scope.status = 'You cancelled the dialog.';
@@ -181,7 +249,6 @@ app.controller("RotaViewer",
 			}
 			$scope.hideEditShift = function (answer) {
 				$mdDialog.hide(answer);
-				console.log(answer);
 
 				$scope.finalRota.shifts[answer.shiftID].name = answer.name;
 				$scope.finalRota.shifts[answer.shiftID].nonResident = answer.nonResident;
