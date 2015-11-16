@@ -4,6 +4,13 @@
     <section layout-padding>
       <h1>Hello!</h1>
       <p>This form will calculate what your (gross) salary would look like for your current rota, according to the <a href="http://www.nhsemployers.org/~/media/Employers/Documents/Need%20to%20know/JD%20A4%20booklet%20FINAL.pdf" target="_blank">NHS Employers' Junior Doctors' Contract Offer</a>.</p>
+
+      <p>It is personalised to <b>exactly</b> which hours you work, <b>even if you are a less-than-full-time trainee</b>. It will give you a direct before/after comparison, so you can see exactly how the proposed contract will affect you.</p>
+
+      <p>It will look something like this:</p>
+
+      <p><img src="img/example_calculator.png" alt="Example calculator output"/></p>
+
       <p>Simply:</p>
       <ol>
         <li>Open your current rota.</li>
@@ -11,7 +18,8 @@
         <li>Copy and paste into the text box below.</li>
         <li>And click the 'Automagic' button.</li>
       </ol>
-      <p></p>
+      <p>If it doesn't work, try fill out <a href="assets/busily-example-rota.xls" target="_blank">this simple example</a>, or click 'Troubleshoot' below.</p>
+
     </section>
     <section layout-padding>
       <md-input-container class="md-block">
@@ -77,13 +85,14 @@
           <div class="md-dialog-content" layout="column">
             <p>This can handle lots of different rota formats, but as you know some are trickier than others. If yours is a monster let's try a few things.</p>
             <ul>
-              <li>Are all the dates in a consistent format? E.g. "day/month".</li>
-              <li>Is your name consistent throughout? E.g. no changing department or role</li>
-              <li>Is your rota spread across multiple tabs in a spreadsheet? You can copy/paste them all into the same box - just leave a few lines between each block.</li>
-              <li>Can you copy/paste a smaller/simpler section of the document? This basically only needs the dates, your name (if applicable) and the shifts (e.g. see below).</li>
+              <li style="padding:5px">Make sure all the dates are in a consistent, daily format (e.g. 16/11, 17/11, 18/11, ...).</li>
+              <li style="padding:5px">Make sure your name is consistent throughout  (e.g. no changing department or role).</li>
+              <li style="padding:5px">Do your shifts mean the same thing throughout? E.g. "ON CALL" isn't different depending on the day - change them to "ON CALL 1" and "ON CALL 2".</li>
+              <li style="padding:5px">Is your rota spread across multiple tabs in a spreadsheet? You can copy/paste them all into the same box, just leave a few lines each time you paste.</li>
+              <li style="padding:5px">Can you copy/paste a smaller or simpler section of the document? This basically only needs the dates, your name (if applicable) and the shifts - e.g. see below.</li>
             </ul>
-            <p>If it still doesn't work, try create a real simple version, like this (or swap the rows/columns if you fancy):</p>
-            <table>
+            <p>If it still doesn't work, try create a real simple version, <a href="assets/busily-example-rota.xls" target="_blank">like this</a> (or swap the rows/columns if you fancy):</p>
+            <table class="salarytable">
               <tr>
                 <td>Date</td>
                 <td>Person 1</td>

@@ -33,7 +33,7 @@ app.controller("MainRotariser",
 		            $scope.finalRota.userID = parseInt($scope.finalRota.userID);
 	            }
 	            RotaStorage.setRota($scope.finalRota);
-
+                console.log($scope.finalRota);
                 $location.path('rotaviewer');
 
 
@@ -248,11 +248,14 @@ app.controller("MainRotariser",
                 if (finalRota.people.length > 1)
                   finalRota.userID = 0;
 
-                $scope.finalRota = finalRota;
+                if (finalRota.pattern.length > 0) {
+                  $scope.finalRota = finalRota;
 
-
-                // hooray! open popup to continue
-                readSuccessDialog();
+                  // hooray! open popup to continue
+                  readSuccessDialog();
+                } else {
+                  $scope.troubleshootDialog();
+                }
 
               } else { // no winners
                 $scope.troubleshootDialog();

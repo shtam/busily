@@ -114,6 +114,8 @@ app.controller("RotaViewer",
 					}
 				});
 
+				console.log(dbRota);
+				console.log(newRota);
 				$scope.rotaSummary = newRota.reduce(function (prev, cur, index) {
 					if (index == 1) {
 						return {
