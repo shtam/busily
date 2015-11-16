@@ -7,6 +7,8 @@ angular.module("busilyApp")
 
 		var rotaObject = {};
 		var rotaStats = {};
+		var calculatedSalary = {};
+
 		var config = {
 			headers: {}
 		};
@@ -41,15 +43,23 @@ angular.module("busilyApp")
 					localStorageService.set("rota", rota);
 				}
 
-				return $http.post("api/rota", {o: rotaObject})
-					.then(
-					function (success) {
+				if (rotaObject._id != undefined) {
+					return $http.put("api/rota/"+rotaObject._id, {o: rotaObject})
+						.then(
+						function (success) {
+						},
+						function (error) {
+						});
+				} else {
 
-					},
-					function (error) {
-
-					}
-				)
+					return $http.post("api/rota", {o: rotaObject})
+						.then(
+						function (success) {
+						},
+						function (error) {
+						}
+					);
+				}
 			},
 			getRotaStats: function(userID, rotaID) {
 				if (localStorageService != undefined && rotaStats.weeks == undefined) {
@@ -61,6 +71,18 @@ angular.module("busilyApp")
 				rotaStats = stats;
 				if (localStorageService != undefined) {
 					localStorageService.set("rotaStats", rotaStats);
+				}
+			},
+			getCalculatedSalary: function(userID, rotaID) {
+				if (localStorageService != undefined && calculatedSalary.grade == undefined) {
+					calculatedSalary = localStorageService.get("calculatedSalary") || {};
+				}
+				return calculatedSalary;
+			},
+			setCalculatedSalary: function(calc) {
+				calculatedSalary = calc;
+				if (localStorageService != undefined) {
+					localStorageService.set("calculatedSalary", calculatedSalary);
 				}
 			}
 		};

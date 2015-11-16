@@ -86,6 +86,22 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
+
+	// andy's stuff
+	app.post("/api/login", passport.authenticate("local-login"), function(req,res) {
+		res.send(req.user);
+	});
+	app.post("/api/signup", passport.authenticate("local-signup"), function(req,res) {
+		res.send(req.user);
+	});
+	app.post('/api/logout', function(req, res){
+		req.logOut();
+		res.send(200);
+	});
+	app.get('/api/loggedin', function(req, res) {
+		res.send(req.isAuthenticated() ? req.user : '0');
+	});
 };
 
 function isLoggedIn(req, res, next) {

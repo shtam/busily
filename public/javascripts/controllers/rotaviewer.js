@@ -1,12 +1,14 @@
 var app = angular.module("busilyApp");
 
 app.controller("RotaViewer",
-	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService",
+	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService", "Security",
 
-		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {
+		function ($scope, $mdDialog, $http, RotaStorage, localStorageService, Security) {
 
 			var dbRota = {};
 			var rotaStats = {};
+
+			Security.isAuthenticated();
 
 			RotaStorage.getRota().then(
 				function (success) {
@@ -16,6 +18,8 @@ app.controller("RotaViewer",
 					dbRota = $scope.finalRota;
 
 					$scope.prepareRota();
+
+					console.log(dbRota);
 				}
 			);
 
@@ -92,10 +96,11 @@ app.controller("RotaViewer",
 					if (shift > -1) {
 						shiftType = dbRota.shifts[shift];
 
-						onCall = (shiftType.nonResident) ? true : false;
 						holiday = (shiftType.holiday) ? true : false;
 
 						if (!holiday && shiftType.startTime.length > 0 && shiftType.endTime.length > 0) {
+
+							onCall = (shiftType.nonResident) ? true : false;
 
 							var startTime = shiftType.startTime[0] + (shiftType.startTime[1] == 30 ? 0.5 : 0);
 							var endTime = shiftType.endTime[0] + (shiftType.endTime[1] == 30 ? 0.5 : 0);
@@ -115,7 +120,7 @@ app.controller("RotaViewer",
 					}
 				});
 
-				var rotaSummary = newRota.reduce(function (prev, cur, index) {
+				$scope.rotaSummary = newRota.reduce(function (prev, cur, index) {
 					if (index == 1) {
 						return {
 							firstDate: prev.date,
@@ -154,17 +159,18 @@ app.controller("RotaViewer",
 					}
 				});
 
-				rotaSummary.weeklyStats = calculateWeeklyStats(rotaSummary);
+				$scope.rotaSummary.weeklyStats = calculateWeeklyStats($scope.rotaSummary);
 
-				RotaStorage.setRotaStats(rotaSummary);
-				console.log(rotaSummary);
+				RotaStorage.setRota($scope.finalRota);
+				RotaStorage.setRotaStats($scope.rotaSummary);
 			};
 
 			function calculateWeeklyStats(rotaSummary) {
 
 				var weeks = rotaSummary.totalDays / 7;
 				var totalHours = rotaSummary.timeCategories.totalTime / weeks;
-				var additionalRosteredHours = (rotaSummary.timeCategories.plainTime > 0) ? Math.max(0, rotaSummary.timeCategories.plainTime / weeks - 40) : 0;
+				var plainHours = (rotaSummary.timeCategories.plainTime > 0) ? rotaSummary.timeCategories.plainTime / weeks : 0;
+				var additionalRosteredHours = Math.max(0, plainHours - 40);
 				var saturdayHours = (rotaSummary.timeCategories.satTime > 0) ? rotaSummary.timeCategories.satTime / weeks : 0;
 				var sundayHours = (rotaSummary.timeCategories.sunTime > 0) ? rotaSummary.timeCategories.sunTime / weeks : 0;
 				var nightHours = (rotaSummary.timeCategories.nightTime > 0) ? rotaSummary.timeCategories.nightTime / weeks : 0;
@@ -173,6 +179,7 @@ app.controller("RotaViewer",
 				var weeklyStats = {
 					weeks: weeks,
 					totalHours: totalHours,
+					plainHours: plainHours,
 					additionalRosteredHours: additionalRosteredHours,
 					saturdayHours: saturdayHours,
 					sundayHours: sundayHours,
@@ -246,7 +253,8 @@ app.controller("RotaViewer",
 
 
 				//$scope.finalRota.shifts[1].colour = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
-			}
+			};
+
 			$scope.hideEditShift = function (answer) {
 				$mdDialog.hide(answer);
 

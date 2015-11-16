@@ -1,5 +1,9 @@
 <div>
-    <md-button ng-show="!security.isAuthenticated()" class="md-primary">Login</md-button>
-    <md-button ng-show="!security.isAuthenticated()" class="md-primary">Register</md-button>
-    <md-button ng-show="security.isAuthenticated()" class="md-primary">Logout</md-button>
+    <div ng-if="!security.isLoggedIn">
+        <md-button class="md-primary" ng-click="security.showLogin()">Login</md-button>
+        <md-button class="md-primary" ng-click="security.showSignup()">Sign Up</md-button>
+    </div>
+    <div ng-if="security.isLoggedIn" >
+        <md-button class="md-primary" ng-click="security.logout()">Logout</md-button>
+    </div>
 </div>

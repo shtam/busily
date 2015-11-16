@@ -24,9 +24,22 @@ md-sidenav.md-locked-open {
   margin-bottom: 16px; }
 
 
+.rotatextbox {
+  background-colour: #cccccc;
+}
 
+table.statstable, table.statstable td {
+  border-collapse: collapse;
+  padding: 5px;
+}
+table.statstable td.title {
+  font-weight: bold;
+}
+table.statstable td.stat {
+  text-align: right;
+}
 
-table.salarytable, th, td {
+table.salarytable, table.salarytable td {
   border: 1px solid grey;
   border-collapse: collapse;
   padding: 10px;

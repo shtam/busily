@@ -1,8 +1,8 @@
 var app = angular.module("busilyApp");
 
 app.controller("MainRotariser",
-    ["$scope", "$mdDialog", "$location", "$http", "GridObject", "localStorageService", "RotaStorage", "findincremental", "datefinder", "RosterObject",
-      function ($scope, $mdDialog, $location, $http, GridObject, localStorageService, RotaStorage, findincremental, datefinder, RosterObject) {
+    ["$scope", "$mdDialog", "$location", "$http", "GridObject", "localStorageService", "RotaStorage", "findincremental", "datefinder", "RosterObject", "Security",
+      function ($scope, $mdDialog, $location, $http, GridObject, localStorageService, RotaStorage, findincremental, datefinder, RosterObject, Security) {
 
         $scope.troubleshootDialog = function (ev) {
           $mdDialog.show({
@@ -11,7 +11,10 @@ app.controller("MainRotariser",
             targetEvent: ev,
             clickOutsideToClose:true
           })
-        }
+        };
+
+        //$scope.security = Security;
+        //$scope.security.isAuthenticated();
 
         function readSuccessDialog(ev) {
           $mdDialog.show({

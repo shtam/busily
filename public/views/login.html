@@ -1,15 +1,23 @@
-<div ng-show="security.isLoginShown">
-    <form ng-submit="security.login(user.username, user.password)">
-        <div>
-            <label>Username:</label>
-            <input type="text" name="username" ng-model="user.username" required/><br/>
-        </div>
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password" ng-model="user.password" required/>
-        </div>
-        <div>
-            <input type="submit" value="Log in"/>
-        </div>
-    </form>
+<div id="popupContainer" ng-clock="" class="md-inline-form">
+
+    <md-content>
+        <form ng-submit="security.login(user.email,user.password)">
+
+                <md-input-container flex>
+                    <label>Email</label>
+                    <input ng-model="user.email" type="email" required>
+                </md-input-container>
+
+                <md-input-container flex>
+                    <label>Password</label>
+                    <input ng-model="user.password" type="password" required>
+                </md-input-container>
+
+            <md-button type="submit" class="md-primary md-raised">
+                Login
+            </md-button>
+
+        </form>
+    </md-content>
+
 </div>

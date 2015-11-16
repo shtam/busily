@@ -22,7 +22,7 @@ var rotaSchema = new mongoose.Schema ({
 	//	display-name: String
 	//},
 	startDate: { type: Date },
-	//end-date: { type: Date },
+	endDate: { type: Date },
 	//repeat-pattern: { type: Boolean, default: false },
 	shifts: [sShifts],
 	people: [

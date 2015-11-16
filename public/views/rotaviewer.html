@@ -1,52 +1,154 @@
 <div id="popupContainer" ng-clock="" class="md-inline-form">
 
-    <p><a ng-href="#/">Home</a> &gt; Edit Rota</p>
 
-    <p>Explanation goes here</p>
+    <md-content>
+        <section layout-padding>
 
-    <p>Link to salary calculator goes here</p>
+            <p><a ng-href="#/">Home</a> &gt; Edit Rota</p>
 
-    <h1>Shift Definitions</h1>
+        </section>
 
-    <p>Explanation goes here</p>
-    <md-grid-list
-            md-cols-gt-md="7" md-cols-sm="3" md-cols-md="8"
-            md-row-height-gt-md="1:1" md-row-height="4:3"
-            md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
+        <section layout-padding>
 
-        <md-grid-tile ng-repeat="shift in finalRota.shifts" ng-class="shift.colour">
-            <md-grid-tile-header>
-                <md-button class="md-icon-button" aria-label="Edit" ng-click="editShift($index)">
-                    <md-icon md-svg-icon="img/icons/edit-icon.svg" style="color:#fff"></md-icon>
-                </md-button>
-            </md-grid-tile-header>
-            <md-grid-tile-footer>
-                <h3>{{shift.name}}</h3>
-            </md-grid-tile-footer>
-        </md-grid-tile>
+            <h1>We're making progress!</h1>
 
-    </md-grid-list>
+            <p>Next step: Edit your shift definitions below and make sure the start times and end times are set.</p>
 
-    <h1>Rota Pattern</h1>
+            <p>If you work non-resident on-calls, make sure that box is ticked for those shift types.</p>
 
-    <h4>Start Date</h4>
-    <md-datepicker ng-model="finalRota.startDate" md-placeholder="Start Date"></md-datepicker>
+            <p>This table will update with a summary of the hours in your rota. Once you're happy, click the SALARY CALCULATOR button.</p>
 
-    <h4>Pattern</h4>
-    <md-grid-list
-            md-cols-gt-md="7" md-cols-sm="3" md-cols-md="8"
-            md-row-height-gt-md="1:1" md-row-height="4:3"
-            md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
+            <p>If something doesn't look right, go <a ng-href="#/">back</a> and click TROUBLESHOOTING.</p>
 
-        <md-grid-tile ng-repeat="rota in finalRota.pattern" ng-class="finalRota.shifts[rota.v[finalRota.userID]].colour">
-            <md-grid-tile-header>
-                <h3>{{formatDate(finalRota.startDate, $index) | date : 'dd-MMM'}}</h3>
-            </md-grid-tile-header>
-            <md-grid-tile-footer ng-if="rota.v[finalRota.userID] > -1">
-                <h3>{{finalRota.shifts[rota.v[finalRota.userID]].name}}</h3>
-            </md-grid-tile-footer>
-        </md-grid-tile>
-    </md-grid-list>
+        </section>
+        <section layout-padding layout="row">
+            <div flex layout="row" layout-align="center center">
+                <table class="statstable">
+                    <tbody>
+                    <tr>
+                        <td class="title">&nbsp;</td>
+                        <td class="title">Total</td>
+                        <td class="title">Weekly Average</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Total hours</td>
+                        <td class="stat">{{rotaSummary.timeCategories.totalTime | number : 2}}</td>
+                        <td class="stat">{{rotaSummary.weeklyStats.totalHours | number : 2}}</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Plain hours</td>
+                        <td class="stat">{{rotaSummary.timeCategories.plainTime | number : 2}}</td>
+                        <td class="stat">{{rotaSummary.weeklyStats.plainHours | number : 2}}</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Night hours</td>
+                        <td class="stat">{{rotaSummary.timeCategories.nightTime | number : 2}}</td>
+                        <td class="stat">{{rotaSummary.weeklyStats.nightHours | number : 2}}</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Saturday hours</td>
+                        <td class="stat">{{rotaSummary.timeCategories.satTime | number : 2}}</td>
+                        <td class="stat">{{rotaSummary.weeklyStats.saturdayHours | number : 2}}</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Sunday hours</td>
+                        <td class="stat">{{rotaSummary.timeCategories.sunTime | number : 2}}</td>
+                        <td class="stat">{{rotaSummary.weeklyStats.sundayHours | number : 2}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div flex layout="row" layout-align="center center">
+            <table class="statstable">
+                <tbody>
+                <tr>
+                    <td class="title">Start Date</td>
+                    <td class="stat">{{rotaSummary.firstDate | date : 'dd-MMM'}}</td>
+                </tr>
+                <tr>
+                    <td class="title">End Date</td>
+                    <td class="stat">{{rotaSummary.lastDate | date : 'dd-MMM'}}</td>
+                </tr>
+                <tr>
+                    <td class="title">Total weeks</td>
+                    <td class="stat">{{rotaSummary.weeklyStats.weeks | number : 1}}</td>
+                </tr>
+                <tr>
+                    <td class="title">Total days</td>
+                    <td class="stat">{{rotaSummary.totalDays}}</td>
+                </tr>
+                <tr>
+                    <td class="title">Working days</td>
+                    <td class="stat">{{rotaSummary.workDays}}</td>
+                </tr>
+                <tr>
+                    <td class="title">Non-resident on-call days</td>
+                    <td class="stat">{{rotaSummary.onCallDays}}</td>
+                </tr>
+                <tr>
+                    <td class="title">Annual leave days</td>
+                    <td class="stat">{{rotaSummary.holidayDays}}</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </section>
+
+        <section layout-padding layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised" layout-align="center center" ng-href="#/salary">
+                Salary Calculator
+            </md-button>
+        </section>
+
+        <section layout-padding>
+            <h2>Shift Definitions</h2>
+
+            <p>It looks like these are the shift types that you work. Click the <md-icon md-svg-icon="img/icons/edit-icon.svg" aria-label="Edit"></md-icon> edit icon to change the working hours.</p>
+
+            <md-grid-list
+                    md-cols-gt-md="7" md-cols-sm="3" md-cols-md="8"
+                    md-row-height-gt-md="1:1" md-row-height="4:3"
+                    md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
+
+                <md-grid-tile ng-repeat="shift in finalRota.shifts" ng-class="shift.colour">
+                    <md-grid-tile-header>
+                        <md-button class="md-icon-button" aria-label="Edit" ng-click="editShift($index)">
+                            <md-icon md-svg-icon="img/icons/edit-icon.svg" style="color:#fff"></md-icon>
+                        </md-button>
+                    </md-grid-tile-header>
+                    <md-grid-tile-footer>
+                        <h3>{{shift.name}}</h3>
+                    </md-grid-tile-footer>
+                </md-grid-tile>
+
+            </md-grid-list>
+        </section>
+
+        <section layout-padding>
+            <h2>Rota Pattern</h2>
+
+            <p>And this is the shift pattern. Monday's on the left, Sunday's on the right.</p>
+
+            <h4>Start Date</h4>
+            <md-datepicker ng-model="finalRota.startDate" md-placeholder="Start Date" ng-change="prepareRota()"></md-datepicker>
+
+            <h4>Pattern</h4>
+            <md-grid-list
+                    md-cols-gt-md="7" md-cols-sm="3" md-cols-md="8"
+                    md-row-height-gt-md="1:1" md-row-height="4:3"
+                    md-gutter-gt-md="16px" md-gutter-gt-sm="8px" md-gutter="4px">
+
+                <md-grid-tile ng-repeat="rota in finalRota.pattern" ng-class="finalRota.shifts[rota.v[finalRota.userID]].colour">
+                    <md-grid-tile-header>
+                        <h3>{{formatDate(finalRota.startDate, $index) | date : 'dd-MMM'}}</h3>
+                    </md-grid-tile-header>
+                    <md-grid-tile-footer ng-if="rota.v[finalRota.userID] > -1">
+                        <h3>{{finalRota.shifts[rota.v[finalRota.userID]].name}}</h3>
+                    </md-grid-tile-footer>
+                </md-grid-tile>
+            </md-grid-list>
+        </section>
+    </md-content>
 
 </div>
 

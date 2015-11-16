@@ -9,29 +9,36 @@ app.controller("SalaryCalc",
 			$scope.rotaSummary.firstDate = new Date($scope.rotaSummary.firstDate);
 			$scope.rotaSummary.lastDate = new Date($scope.rotaSummary.lastDate);
 
-			$scope.currentGrade = 0;
-			$scope.currentPay = "FY1 - Min";
-			$scope.currentPayValue = 0;
-			$scope.currentPayAsGrade = 0;
-			$scope.currentBand = "None";
-			$scope.currentBandPercent = 0;
-			$scope.currentBandValue = 0;
-			$scope.currentDeanery = 0;
-			$scope.currentOnCallAllowance = 0;
-			$scope.currentOnCallAllowanceText = "";
-			$scope.currentOnCallAllowanceValue = 0;
-			$scope.currentSpecialty = "";
-			$scope.currentSubSpecialty = "";
-			$scope.currentPremia = 0;
-			$scope.currentNode = "";
-			$scope.currentNodePay = 0;
-			$scope.currentLondonValue = 0;
-			$scope.currentExtraHoursValue = {
-				additionalBasicHours: 0,
-				nightHours: 0,
-				satHours: 0,
-				sunHours: 0
-			};
+			$scope.calculated = RotaStorage.getCalculatedSalary();
+
+			if ($scope.calculated.grade == undefined) {
+
+				$scope.calculated.grade = 0;
+				$scope.calculated.Pay = "FY1 - Min";
+				$scope.calculated.PayValue = 0;
+				$scope.calculated.PayAsGrade = 0;
+				$scope.calculated.Band = "None";
+				$scope.calculated.BandPercent = 0;
+				$scope.calculated.BandValue = 0;
+				$scope.calculated.FullTime = 100;
+				$scope.calculated.Deanery = 0;
+				$scope.calculated.OnCallAllowance = 0;
+				$scope.calculated.OnCallAllowanceText = "";
+				$scope.calculated.OnCallAllowanceValue = 0;
+				$scope.calculated.Specialty = "";
+				$scope.calculated.SubSpecialty = "";
+				$scope.calculated.Premia = 0;
+				$scope.calculated.Node = "";
+				$scope.calculated.NodePay = 0;
+				$scope.calculated.LondonValue = 0;
+				$scope.calculated.ExtraHoursValue = {
+					additionalBasicHours: 0,
+					nightHours: 0,
+					satHours: 0,
+					sunHours: 0
+				};
+
+			}
 
 			$scope.grades = [
 				"FY1",
@@ -64,12 +71,16 @@ app.controller("SalaryCalc",
 			};
 			$scope.oldBands = {
 				"None": 0,
-				"1A (50%)": 50,
-				"1B (40%)": 40,
-				"1C (20%)": 20,
-				"2A (80%)": 80,
-				"2B (50%)": 50,
-				"3 (100%)": 100
+				"Full-Time GP Banding (45%)": 45,
+				"Full-Time BAND 1C (20%)": 20,
+				"Full-Time BAND 1B (40%)": 40,
+				"Full-Time BAND 1A (50%)": 50,
+				"Full-Time BAND 2B (50%)": 50,
+				"Full-Time BAND 2A (80%)": 80,
+				"Full-Time BAND 3 (100%)": 100,
+				"Less than full time BAND FC (20%)": 20,
+				"Less than full time BAND FB (40%)": 40,
+				"Less than full time BAND FA (50%)": 50
 			};
 			$scope.specialties = [
 				"Foundation Programme",
@@ -181,6 +192,14 @@ app.controller("SalaryCalc",
 				"North West London",
 				"South London"
 			];
+			$scope.fulltime = {
+				"Full-time (100%)": 100,
+				"Less than full time - F5: 20-23.9hrs/wk (50-59% of full time)": 50,
+				"Less than full time - F6: 24-27.9hrs/wk (60-69% of full time)": 60,
+				"Less than full time - F7: 28-31.9hrs/wk (70-79% of full time)": 70,
+				"Less than full time - F8: 32-35.9hrs/wk (80-89% of full time)": 80,
+				"Less than full time - F9: 36-39.9hrs/wk (90-99% of full time)": 90
+			};
 
 			var londonDeaneries = {
 				"North Central and East London": true,
@@ -227,55 +246,58 @@ app.controller("SalaryCalc",
 
 			$scope.recalculate = function () {
 
+				// fraction of full-time
+				//$scope.calculated.FullTime;
+
 				// old pay
-				$scope.currentPayValue = $scope.existingPay[$scope.currentPay][1];
-				$scope.currentPayAsGrade = $scope.grades[$scope.existingPay[$scope.currentPay][0]];
+				$scope.calculated.PayValue = $scope.existingPay[$scope.calculated.Pay][1] / 100 * $scope.calculated.FullTime;
+				$scope.calculated.PayAsGrade = $scope.grades[$scope.existingPay[$scope.calculated.Pay][0]];
 
 				// old pay banding
 
-				if ($scope.currentBand != "None") {
-					$scope.currentBandPercent = $scope.oldBands[$scope.currentBand];
-					$scope.currentBandValue = ($scope.currentPayValue > 0) ? $scope.currentPayValue / 100 * $scope.currentBandPercent : 0;
+				if ($scope.calculated.Band != "None") {
+					$scope.calculated.BandPercent = $scope.oldBands[$scope.calculated.Band];
+					$scope.calculated.BandValue = ($scope.calculated.PayValue > 0) ? $scope.calculated.PayValue / 100 * $scope.calculated.BandPercent : 0;
 				}
 
 				// new basic pay
-				$scope.currentNode = oldStageToNodes[$scope.currentGrade];
-				$scope.currentNodePay = newPayNodes[$scope.currentNode];
+				$scope.calculated.Node = oldStageToNodes[$scope.calculated.grade];
+				$scope.calculated.NodePay = newPayNodes[$scope.calculated.Node] / 100 * $scope.calculated.FullTime;
 
 				// on call allowance
-				$scope.currentOnCallAllowanceValue = 0;
-				$scope.currentOnCallAllowanceText = "None";
+				$scope.calculated.OnCallAllowanceValue = 0;
+				$scope.calculated.OnCallAllowanceText = "None";
 				if ($scope.rotaSummary.onCallDays > 0) {
 					if ($scope.rotaSummary.onCallDays > 8) { // works fewer than 1 in 8 days
-						$scope.currentOnCallAllowance = onCallAllowance[8];
-						$scope.currentOnCallAllowanceText = onCallText[8];
+						$scope.calculated.OnCallAllowance = onCallAllowance[8];
+						$scope.calculated.OnCallAllowanceText = onCallText[8];
 					} else if ($scope.rotaSummary.onCallDays > 4) { // works more than 1 in 8, fewer than 1 in 4
-						$scope.currentOnCallAllowance = onCallAllowance[4];
-						$scope.currentOnCallAllowanceText = onCallText[4];
+						$scope.calculated.OnCallAllowance = onCallAllowance[4];
+						$scope.calculated.OnCallAllowanceText = onCallText[4];
 					} else { // works 1 in 4 or more frequently
-						$scope.currentOnCallAllowance = onCallAllowance[0];
-						$scope.currentOnCallAllowanceText = onCallText[0];
+						$scope.calculated.OnCallAllowance = onCallAllowance[0];
+						$scope.calculated.OnCallAllowanceText = onCallText[0];
 					}
-					$scope.currentOnCallAllowanceValue = $scope.currentNodePay / 100 * $scope.currentOnCallAllowance;
+					$scope.calculated.OnCallAllowanceValue = $scope.calculated.NodePay / 100 * $scope.calculated.OnCallAllowance;
 				}
 
 				// specialty training premia
-				$scope.currentPremia = 0;
-				if (payPremia[$scope.specialties[$scope.currentSpecialty]] != undefined) {
-					if ($scope.currentGrade >= payPremia[$scope.specialties[$scope.currentSpecialty]][0]) {
-						$scope.currentPremia = payPremia[$scope.specialties[$scope.currentSpecialty]][1];
+				$scope.calculated.Premia = 0;
+				if (payPremia[$scope.specialties[$scope.calculated.Specialty]] != undefined) {
+					if ($scope.calculated.grade >= payPremia[$scope.specialties[$scope.calculated.Specialty]][0]) {
+						$scope.calculated.Premia = payPremia[$scope.specialties[$scope.calculated.Specialty]][1]  / 100 * $scope.calculated.FullTime;
 					}
 				}
 
 				// London weighting
-				$scope.currentLondonValue = 0;
-				if (londonDeaneries[$scope.deaneries[$scope.currentDeanery]]) {
-					$scope.currentLondonValue = londonWeighting;
+				$scope.calculated.LondonValue = 0;
+				if (londonDeaneries[$scope.deaneries[$scope.calculated.Deanery]]) {
+					$scope.calculated.LondonValue = londonWeighting  / 100 * $scope.calculated.FullTime;
 				}
 
 				// extra hours
-				var hourlyBasic = $scope.currentNodePay / 40;
-				$scope.currentExtraHoursValue = {
+				var hourlyBasic = $scope.calculated.NodePay / 40;
+				$scope.calculated.ExtraHoursValue = {
 					additionalBasicHours: Math.min($scope.rotaSummary.weeklyStats.additionalRosteredHours, 8) * hourlyBasic, // max of 8
 					nightHours: (hourlyBasic / 100 * 50) * $scope.rotaSummary.weeklyStats.nightHours,
 					satHours: (hourlyBasic / 100 * 33) * $scope.rotaSummary.weeklyStats.saturdayHours,
@@ -283,27 +305,30 @@ app.controller("SalaryCalc",
 				};
 
 				// current package
-				$scope.currentPackage =
-					$scope.currentPayValue +
-					$scope.currentBandValue +
-					$scope.currentLondonValue
+				$scope.calculated.Package =
+					$scope.calculated.PayValue +
+					$scope.calculated.BandValue +
+					$scope.calculated.LondonValue
 				;
 				// proposed package
-				$scope.proposedPackage =
-					$scope.currentNodePay +
-					$scope.currentOnCallAllowanceValue +
-					$scope.currentExtraHoursValue.additionalBasicHours +
-					$scope.currentExtraHoursValue.nightHours +
-					$scope.currentExtraHoursValue.satHours +
-					$scope.currentExtraHoursValue.sunHours +
-					$scope.currentPremia +
-					$scope.currentLondonValue
+				$scope.calculated.proposedPackage =
+					$scope.calculated.NodePay +
+					$scope.calculated.OnCallAllowanceValue +
+					$scope.calculated.ExtraHoursValue.additionalBasicHours +
+					$scope.calculated.ExtraHoursValue.nightHours +
+					$scope.calculated.ExtraHoursValue.satHours +
+					$scope.calculated.ExtraHoursValue.sunHours +
+					$scope.calculated.Premia +
+					$scope.calculated.LondonValue
 				;
 
-				$scope.differenceValue = $scope.proposedPackage - $scope.currentPackage;
-				$scope.differencePercent = (1 - ($scope.currentPackage / $scope.proposedPackage)) * 100;
-				$scope.differenceStyle = ($scope.differenceValue < 0) ? 'worse' : 'better';
+				$scope.calculated.differenceValue = $scope.calculated.proposedPackage - $scope.calculated.Package;
+				$scope.calculated.differencePercent = (1 - ($scope.calculated.Package / $scope.calculated.proposedPackage)) * 100;
+				$scope.calculated.differenceStyle = ($scope.calculated.differenceValue < 0) ? 'worse' : 'better';
 
+				RotaStorage.setCalculatedSalary($scope.calculated);
 			};
+
+			$scope.recalculate();
 		}
 	]);
