@@ -12,11 +12,14 @@
 
             <h1>We're making progress!</h1>
 
-            <p>Next step: Edit your shift definitions below and make sure the start times and end times are set.</p>
+            <p>Next steps:</p>
 
-            <p>If you work non-resident on-calls, make sure that box is ticked for those shift types.</p>
+            <ol>
+                <li>Edit your shift types below, making sure the start and end times are set. If you work non-resident on-calls, tick that box for those shift types.</li>
+                <li>Once you're happy, click the SALARY CALCULATOR button.</li>
+            </ol>
 
-            <p>This table will update with a summary of the hours in your rota. Once you're happy, click the SALARY CALCULATOR button.</p>
+            <p>This table below will update with a summary of the hours in your rota.</p>
 
             <p>If something doesn't look right, go <a ng-href="#/">back</a> and click TROUBLESHOOTING.</p>
 
@@ -101,7 +104,7 @@
         </section>
 
         <section layout-padding>
-            <h2>Shift Definitions</h2>
+            <h2>Shift Types</h2>
 
             <p>It looks like these are the shift types that you work. Click the <md-icon md-svg-icon="img/icons/edit-icon.svg" aria-label="Edit"></md-icon> edit icon to change the working hours.</p>
 
@@ -122,6 +125,12 @@
                 </md-grid-tile>
 
             </md-grid-list>
+        </section>
+
+        <section layout-padding layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised" layout-align="center center" ng-href="#/salary">
+                Salary Calculator
+            </md-button>
         </section>
 
         <section layout-padding>
@@ -148,6 +157,13 @@
                 </md-grid-tile>
             </md-grid-list>
         </section>
+
+        <section layout-padding layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised" layout-align="center center" ng-href="#/salary">
+                Salary Calculator
+            </md-button>
+        </section>
+
     </md-content>
 
 </div>

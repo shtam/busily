@@ -156,7 +156,30 @@
 
             <h2>I need your help!</h2>
 
-            <p>If you're willing to ANONYMOUSLY share this data, please provide your email address </p>
+            <p>I'd like to do 2 things:</p>
+
+            <ol>
+                <li>Let you use this tool to save/lookup your rota and share it with your friends/loved ones. For free. Maybe even an app or something fancy like that.</li>
+                <li>ANONYMOUSLY use the data above to create some reports about how many junior doctors will be impacted - for better or worse - by this new contract.</li>
+            </ol>
+
+            <p>If either of those sound good to you, please provide your email address below so I can keep you updated - and that's all it'll be used for.</p>
+
+            <md-input-container>
+                <label>Email</label>
+                <input ng-model="email" type="email" validate>
+            </md-input-container>
+
+            <md-checkbox ng-model="canContact" aria-label="Opt In to receive updates">
+                Opt In to receive updates
+            </md-checkbox>
+            <md-checkbox ng-model="canUseData" aria-label="Opt In to anonymously share data">
+                Opt In to anonymously share data
+            </md-checkbox>
+
+            <md-button class="md-primary md-raised" ng-click="saveData()">
+                Submit Data
+            </md-button>
 
         </section>
 

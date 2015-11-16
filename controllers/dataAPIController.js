@@ -30,11 +30,11 @@ module.exports = function(app, passport) {
 	{
 		o = req.body.o;
 		var newrota = new Rota(o);
-		newrota.save(function (erri, doc) {
+		newrota.save(function (err, doc) {
 			if (err) res.status(500).end();
 			//res.status(201).end();
 			// return id
-			res.josn({"rotaid": doc._id});
+			res.json({"rotaid": doc._id});
 		});
 	});
 	app.get("/api/userrota/:userid", function(req, res) {

@@ -5,6 +5,12 @@ app.controller("SalaryCalc",
 
 		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {
 
+			var dbRota = RotaStorage.getRota();
+
+			var dbID = RotaStorage.setRotaDB(dbRota);
+
+			console.log(dbID);
+
 			$scope.rotaSummary = RotaStorage.getRotaStats();
 			$scope.rotaSummary.firstDate = new Date($scope.rotaSummary.firstDate);
 			$scope.rotaSummary.lastDate = new Date($scope.rotaSummary.lastDate);
@@ -329,6 +335,36 @@ app.controller("SalaryCalc",
 
 				RotaStorage.setCalculatedSalary($scope.calculated);
 				console.log($scope.calculated);
+			};
+
+			$scope.saveData = function() {
+
+
+				var newRota = dbRota;
+
+				if (dbID != undefined) {
+					newRota._id = dbID;
+				}
+
+				newRota.email = $scope.email;
+				newRota.canUseData = $scope.canUseData;
+				newRota.canContact = $scope.canContact;
+
+				RotaStorage.setRotaDB(newRota).then(
+					function(success) {
+						$scope.showSimpleToast = function () {
+							$mdToast.show(
+								$mdToast.simple()
+									.content('Thank you!')
+									.position('bottom left')
+									.hideDelay(3000)
+							);
+						}
+					},
+					function(error) {
+
+					}
+				);
 			};
 
 			$scope.recalculate();
