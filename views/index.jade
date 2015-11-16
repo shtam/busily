@@ -9,12 +9,12 @@ head
   link(rel='stylesheet', href='/stylesheets/skygradients.css')
 
   body(layout='column', ng-controller='AppController as vm')
-    md-toolbar(layout='row')
+    md-toolbar
       .md-toolbar-tools
-
-        h1 Busily -  #{title}
+        md-icon(md-svg-icon='img/icons/logo-white.svg',aria-label='Busily Logo')
+        h2
+          |&nbsp;&nbsp;Busily
         span(flex='')
-        login-toolbar
 
     div(layout='row', flex='')
 

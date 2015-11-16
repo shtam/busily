@@ -265,6 +265,7 @@ app.controller("SalaryCalc",
 				$scope.calculated.NodePay = newPayNodes[$scope.calculated.Node] / 100 * $scope.calculated.FullTime;
 
 				// on call allowance
+				$scope.calculated.OnCallAllowance = 0;
 				$scope.calculated.OnCallAllowanceValue = 0;
 				$scope.calculated.OnCallAllowanceText = "None";
 				if ($scope.rotaSummary.onCallDays > 0) {
@@ -327,6 +328,7 @@ app.controller("SalaryCalc",
 				$scope.calculated.differenceStyle = ($scope.calculated.differenceValue < 0) ? 'worse' : 'better';
 
 				RotaStorage.setCalculatedSalary($scope.calculated);
+				console.log($scope.calculated);
 			};
 
 			$scope.recalculate();

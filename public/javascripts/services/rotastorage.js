@@ -14,51 +14,17 @@ angular.module("busilyApp")
 		};
 
 		return {
-			getRota: function(userID, rotaID) {
-				return $http.get("api/rota")
-					.then(
-					function (success) {
-						if (success.data != null) {
-							rotaObject = success.data[success.data.length-1];
-							return rotaObject;
-						} else {
-							if (localStorageService != undefined && rotaObject.people == undefined) {
-								rotaObject = localStorageService.get("rota") || {};
-							}
-							return rotaObject;
-						}
-					},
-					function (error) {
-						if (localStorageService != undefined && rotaObject.people == undefined) {
-							rotaObject = localStorageService.get("rota") || {};
-						}
-						return rotaObject;
-					}
-				)
+			getRota: function() {
+				if (localStorageService != undefined && rotaObject.people == undefined) {
+					rotaObject = localStorageService.get("rota") || {};
+				}
+				return rotaObject;
 			},
 			setRota: function(rota) {
 				rotaObject = rota;
 
 				if (localStorageService != undefined) {
 					localStorageService.set("rota", rota);
-				}
-
-				if (rotaObject._id != undefined) {
-					return $http.put("api/rota/"+rotaObject._id, {o: rotaObject})
-						.then(
-						function (success) {
-						},
-						function (error) {
-						});
-				} else {
-
-					return $http.post("api/rota", {o: rotaObject})
-						.then(
-						function (success) {
-						},
-						function (error) {
-						}
-					);
 				}
 			},
 			getRotaStats: function(userID, rotaID) {
@@ -83,6 +49,41 @@ angular.module("busilyApp")
 				calculatedSalary = calc;
 				if (localStorageService != undefined) {
 					localStorageService.set("calculatedSalary", calculatedSalary);
+				}
+			},
+			getRotaDB: function() {
+				return $http.get("api/rota")
+					.then(
+					function (success) {
+						if (success.data != null) {
+							rotaObject = success.data[success.data.length - 1];
+							return rotaObject;
+						} else {
+						}
+					},
+					function (error) {
+					}
+				)
+			},
+			setRotaDB: function(rota) {
+				rotaObject = rota;
+
+				if (rotaObject._id != undefined) {
+					return $http.put("api/rota/" + rotaObject._id, {o: rotaObject})
+						.then(
+						function (success) {
+						},
+						function (error) {
+						});
+				} else {
+
+					return $http.post("api/rota", {o: rotaObject})
+						.then(
+						function (success) {
+						},
+						function (error) {
+						}
+					);
 				}
 			}
 		};

@@ -8,20 +8,15 @@ app.controller("RotaViewer",
 			var dbRota = {};
 			var rotaStats = {};
 
-			Security.isAuthenticated();
+			dbRota = RotaStorage.getRota();
 
-			RotaStorage.getRota().then(
-				function (success) {
-					$scope.finalRota = success;
-					$scope.finalRota.startDate = new Date($scope.finalRota.startDate);
-
-					dbRota = $scope.finalRota;
-
-					$scope.prepareRota();
-
-					console.log(dbRota);
-				}
-			);
+			if (dbRota.startDate != undefined) {
+				$scope.finalRota = dbRota;
+				$scope.finalRota.startDate = new Date($scope.finalRota.startDate);
+				dbRota = $scope.finalRota;
+				prepareRota();
+				console.log(dbRota);
+			}
 
 			// returns overlap between [a1,a2] and [b1,b2]
 			function getTimeOverlap(a1,a2,b1,b2) {
@@ -77,7 +72,7 @@ app.controller("RotaViewer",
 				}
 			}
 
-			$scope.prepareRota = function() {
+			function prepareRota () {
 				// expand format stored in DB into something a bit more useful
 				// [ {date:, day:, shiftType: }, ... ]
 
@@ -164,6 +159,8 @@ app.controller("RotaViewer",
 				RotaStorage.setRota($scope.finalRota);
 				RotaStorage.setRotaStats($scope.rotaSummary);
 			};
+
+			$scope.prepareRota = prepareRota;
 
 			function calculateWeeklyStats(rotaSummary) {
 

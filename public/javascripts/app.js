@@ -156,8 +156,6 @@ app.directive("loginToolbar", function () {
 		templateUrl: "views/login-toolbar.html",
 		controller: function ($scope, Security) {
 			$scope.security = Security;
-			$scope.security.isAuthenticated();
-			console.log("help",$scope.security.isLoggedIn);
 		}
 	}
 });
