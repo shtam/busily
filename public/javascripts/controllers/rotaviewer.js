@@ -15,7 +15,6 @@ app.controller("RotaViewer",
 				$scope.finalRota.startDate = new Date($scope.finalRota.startDate);
 				dbRota = $scope.finalRota;
 				prepareRota();
-				console.log(dbRota);
 			}
 
 			// returns overlap between [a1,a2] and [b1,b2]

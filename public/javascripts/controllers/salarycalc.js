@@ -1,15 +1,19 @@
 var app = angular.module("busilyApp");
 
 app.controller("SalaryCalc",
-	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService",
+	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService", "$mdToast",
 
-		function ($scope, $mdDialog, $http, RotaStorage, localStorageService) {
+		function ($scope, $mdDialog, $http, RotaStorage, localStorageService, $mdToast) {
 
 			var dbRota = RotaStorage.getRota();
 
-			var dbID = RotaStorage.setRotaDB(dbRota);
+			$scope.dbID = {};
+			//RotaStorage.setRotaDB(dbRota).then(
+			//	function(success) {
+			//		$scope.dbID = success.data;
+			//	}
+			//);
 
-			console.log(dbID);
 
 			$scope.rotaSummary = RotaStorage.getRotaStats();
 			$scope.rotaSummary.firstDate = new Date($scope.rotaSummary.firstDate);
@@ -334,25 +338,30 @@ app.controller("SalaryCalc",
 				$scope.calculated.differenceStyle = ($scope.calculated.differenceValue < 0) ? 'worse' : 'better';
 
 				RotaStorage.setCalculatedSalary($scope.calculated);
-				console.log($scope.calculated);
+
+				$scope.saveData();
 			};
 
-			$scope.saveData = function() {
+			$scope.saveData = function(showToast) {
 
 
 				var newRota = dbRota;
 
-				if (dbID != undefined) {
-					newRota._id = dbID;
+				if ($scope.dbID.rotaid != undefined) {
+					newRota._id = $scope.dbID.rotaid;
 				}
 
 				newRota.email = $scope.email;
 				newRota.canUseData = $scope.canUseData;
 				newRota.canContact = $scope.canContact;
+				newRota.calculated = $scope.calculated;
 
 				RotaStorage.setRotaDB(newRota).then(
 					function(success) {
-						$scope.showSimpleToast = function () {
+						if (success.data != undefined) {
+							$scope.dbID = success.data;
+						}
+						if (showToast) {
 							$mdToast.show(
 								$mdToast.simple()
 									.content('Thank you!')

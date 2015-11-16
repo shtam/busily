@@ -72,6 +72,7 @@ angular.module("busilyApp")
 					return $http.put("api/rota/" + rotaObject._id, {o: rotaObject})
 						.then(
 						function (success) {
+							return success;
 						},
 						function (error) {
 						});
@@ -80,6 +81,7 @@ angular.module("busilyApp")
 					return $http.post("api/rota", {o: rotaObject})
 						.then(
 						function (success) {
+							return success;
 						},
 						function (error) {
 						}
