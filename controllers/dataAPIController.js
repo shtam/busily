@@ -5,12 +5,12 @@ module.exports = function(app, passport) {
 				res.json(docs);
 		});
 	});
-	app.get("/api/rota/:rotaid", function(req, res) {
+	/*app.get("/api/rota/:rotaid", function(req, res) {
 		Rota.findById( req.params.rotaid,  function(err, docs) {
 				if (err) res.json(null);
 				res.json(docs);
 		});
-	});
+	});*/
 	app.put("/api/rota/:rotaid", function(req, res)
 	{
 		o = req.body.o;
@@ -30,9 +30,11 @@ module.exports = function(app, passport) {
 	{
 		o = req.body.o;
 		var newrota = new Rota(o);
-		newrota.save(function (err) {
+		newrota.save(function (erri, doc) {
 			if (err) res.status(500).end();
-			res.status(201).end();
+			//res.status(201).end();
+			// return id
+			res.josn({"rotaid": doc._id});
 		});
 	});
 	app.get("/api/userrota/:userid", function(req, res) {
