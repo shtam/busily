@@ -11,6 +11,33 @@ var sShifts = new mongoose.Schema ({
 	holiday: Boolean
 });
 
+var sCalculated = new mongoose.Schema ({
+	grade: Number,
+	Pay: String,
+	PayValue: Number,
+	PayAsGrade: Number,
+	Band: String,
+	BandPercent: Number,
+	BandValue: Number,
+	Fulltime: Number,
+	Deanery: Number,
+	OnCallAllowance: Number,
+	OnCallAllowanceText: String,
+	OnCallAllowanceValue: Number,
+	Speciality: String,
+	SubSpeciality: String,
+	Premia: Number,
+	Node: String,
+	NodePay: Number,
+	LondonValue: Number,
+	ExtraHoursValue: {
+		additionalBasicHours: Number,
+		nightHours: Number,
+		satHours: Number,
+		sunHours: Number,
+	}
+});
+
 var sPatterns = new mongoose.Schema ({
 	v: [Number]
 });
@@ -18,6 +45,9 @@ var sPatterns = new mongoose.Schema ({
 var rotaSchema = new mongoose.Schema ({
 	ownerid: String,
 	userID: Number,
+	email: String,
+	canUseData: { type: Boolean, default: false },
+	canContact: { type: Boolean, default: false },
 	//location: {
 	//	display-name: String
 	//},
@@ -31,7 +61,8 @@ var rotaSchema = new mongoose.Schema ({
 			name: String
 		}
 	],
-	pattern: [sPatterns]
+	pattern: [sPatterns],
+	calculated: sCalculated
 });
 
 Rota = mongoose.model('Rota', rotaSchema);
