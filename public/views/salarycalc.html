@@ -78,6 +78,8 @@
 
             <h2>Gross salary comparison</h2>
 
+            <div flex layout="row" layout-align="center center">
+
             <table class="salarytable">
                 <tbody>
                 <tr class="total">
@@ -101,27 +103,27 @@
                     <td class="currency">{{calculated.LondonValue | currency}}</td>
                 </tr>
                 <tr>
-                    <td>Additional Rostered Hours ({{rotaSummary.weeklyStats.additionalRosteredHours | number}})</td>
+                    <td>Additional Rostered Hours ({{rotaSummary.weeklyStats.additionalRosteredHours | number : 2}})</td>
                     <td class="currency">N/A</td>
                     <td class="currency">{{calculated.ExtraHoursValue.additionalBasicHours | currency}}</td>
                 </tr>
                 <tr>
-                    <td>Saturday Hours ({{rotaSummary.weeklyStats.saturdayHours | number}})</td>
+                    <td>Saturday Hours ({{rotaSummary.weeklyStats.saturdayHours | number : 2}})</td>
                     <td class="currency">N/A</td>
                     <td class="currency">{{calculated.ExtraHoursValue.satHours | currency}}</td>
                 </tr>
                 <tr>
-                    <td>Sunday Hours ({{rotaSummary.weeklyStats.sundayHours | number}})</td>
+                    <td>Sunday Hours ({{rotaSummary.weeklyStats.sundayHours | number : 2}})</td>
                     <td class="currency">N/A</td>
                     <td class="currency">{{calculated.ExtraHoursValue.sunHours | currency}}</td>
                 </tr>
                 <tr>
-                    <td>Night Hours ({{rotaSummary.weeklyStats.nightHours | number}})</td>
+                    <td>Night Hours ({{rotaSummary.weeklyStats.nightHours | number : 2}})</td>
                     <td class="currency">N/A</td>
                     <td class="currency">{{calculated.ExtraHoursValue.nightHours | currency}}</td>
                 </tr>
                 <tr>
-                    <td>On-Call Allowance ({{calculated.OnCallAllowanceValue}}%)</td>
+                    <td>On-Call Allowance ({{calculated.OnCallAllowance}}%)</td>
                     <td class="currency">N/A</td>
                     <td class="currency">{{calculated.OnCallAllowanceValue | currency}}</td>
                 </tr>
@@ -145,6 +147,16 @@
                 </tr>
                 </tbody>
             </table>
+
+            </div>
+
+        </section>
+
+        <section layout-padding>
+
+            <h2>I need your help!</h2>
+
+            <p>If you're willing to ANONYMOUSLY share this data, please provide your email address </p>
 
         </section>
 
