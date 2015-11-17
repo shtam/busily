@@ -15,15 +15,15 @@ module.exports = function(app, passport) {
 	{
 		o = req.body.o;
 		Rota.FindByIdAndUpdate( req.params.rotaid, o, function (err) {
-			if (err) res.status(500).end();
+			//if (err) res.status(500).end();
+			if (err) console.log(err); 
 			res.status(201).end();
 		});
 	});
 	app.post("/api/rota/delete/:rotaid", function(req, res)
 	{
 		Rota.remove( { _id: req.params.rotaid }, function (err) {
-			//if (err) res.status(500).end();
-			if (err) console.log(err); 
+			if (err) res.status(500).end();
 			res.status(201).end();
 		});
 	});
