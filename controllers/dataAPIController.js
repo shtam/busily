@@ -13,10 +13,9 @@ module.exports = function(app, passport) {
 	});*/
 	app.put("/api/rota/:rotaid", function(req, res)
 	{
-		console.log("steve is a wanks");
 		o = req.body.o;
+		delete o._id;
 		Rota.findByIdAndUpdate( req.params.rotaid, o, function (err) {
-			console.log("dicks");
 			//if (err) res.status(500).end();
 			if (err) console.log(err); 
 			res.status(201).end();
