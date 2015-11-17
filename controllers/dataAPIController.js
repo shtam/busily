@@ -22,7 +22,8 @@ module.exports = function(app, passport) {
 	app.post("/api/rota/delete/:rotaid", function(req, res)
 	{
 		Rota.remove( { _id: req.params.rotaid }, function (err) {
-			if (err) res.status(500).end();
+			//if (err) res.status(500).end();
+			if (err) console.log(err); 
 			res.status(201).end();
 		});
 	});
