@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
 	app.put("/api/rota/:rotaid", function(req, res)
 	{
 		o = req.body.o;
-		Rota.update( { _id: req.params.rotaid }, { $set: o }, { safe: true }, function (err) {
+		Rota.FindByIdAndUpdate( req.params.rotaid, { $set: o }, function (err) {
 			if (err) res.status(500).end();
 			res.status(201).end();
 		});
