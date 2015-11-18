@@ -1,14 +1,19 @@
 var app = angular.module("busilyApp");
 
 app.controller("RotaViewer",
-	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService", "Security",
+	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService", "Security", "$location",
 
-		function ($scope, $mdDialog, $http, RotaStorage, localStorageService, Security) {
+		function ($scope, $mdDialog, $http, RotaStorage, localStorageService, Security, $location) {
 
 			var dbRota = {};
 			var rotaStats = {};
 
 			dbRota = RotaStorage.getRota();
+
+			if (dbRota.pattern == undefined) {
+				$location.path('');
+				return;
+			}
 
 			if (dbRota.startDate != undefined) {
 				$scope.finalRota = dbRota;

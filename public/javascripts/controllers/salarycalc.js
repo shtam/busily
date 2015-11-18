@@ -1,9 +1,9 @@
 var app = angular.module("busilyApp");
 
 app.controller("SalaryCalc",
-	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService", "$mdToast",
+	["$scope", "$mdDialog", "$http", "RotaStorage", "localStorageService", "$mdToast", "$location",
 
-		function ($scope, $mdDialog, $http, RotaStorage, localStorageService, $mdToast) {
+		function ($scope, $mdDialog, $http, RotaStorage, localStorageService, $mdToast, $location) {
 
 			var dbRota = RotaStorage.getRota();
 
@@ -16,6 +16,12 @@ app.controller("SalaryCalc",
 
 
 			$scope.rotaSummary = RotaStorage.getRotaStats();
+
+			if (dbRota.pattern == undefined || $scope.rotaSummary.weeklyStats == undefined) {
+				$location.path('');
+				return;
+			}
+
 			$scope.rotaSummary.firstDate = new Date($scope.rotaSummary.firstDate);
 			$scope.rotaSummary.lastDate = new Date($scope.rotaSummary.lastDate);
 

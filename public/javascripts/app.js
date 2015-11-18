@@ -30,9 +30,8 @@ app.config(['$routeProvider', function ($routeProvider) {
 			templateUrl: 'views/salarycalc.html',
 			controller: 'SalaryCalc'
 		})
-		.when('/login', {
-			templateUrl: 'views/login.html',
-			controller: 'Login'
+		.when('/methodology', {
+			templateUrl: 'views/methodology.html'
 		})
 		//.when('/admin', {
 		//	templateUrl: 'views/admin.html',

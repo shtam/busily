@@ -1,0 +1,134 @@
+<div id="popupContainer" ng-clock="" class="md-inline-form">
+
+    <md-content>
+        <section layout-padding>
+
+            <p><a ng-href="#/">Home</a> &gt; <a ng-href="#/rotaviewer">Edit Rota</a> &gt; <a ng-href="#/salary">Salary Calculator</a> &gt; Methodology</p>
+
+        </section>
+
+        <section layout-padding>
+
+            <h1>Methodology/assumptions</h1>
+
+            <p>It is important that these calculations are accurate, so I encourage criticism. Please let me know on the Junior Doctors' Facebook group, or email me at info@busily.co.uk.</p>
+
+            <h2>Counting time</h2>
+
+            <p>Definitions (<a href="http://www.nhsemployers.org/~/media/Employers/Documents/Need%20to%20know/JD%20A4%20booklet%20FINAL.pdf" target="_blank">NHS Employers contract offer, page 6</a>):</p>
+
+            <table class="salarytable">
+                <tr>
+                    <td>Shift Type</td>
+                    <td>Times</td>
+                    <td>Pay rate</td>
+                </tr>
+                <tr>
+                    <td>Plain Time</td>
+                    <td>
+                        7am-10pm Mon-Fri<br />
+                        7am-7pm Sat
+                    </td>
+                    <td>Base-rate</td>
+                </tr>
+                <tr>
+                    <td>Saturday Time</td>
+                    <td>7pm-10pm Sat</td>
+                    <td>Time-and-a-third</td>
+                </tr>
+                <tr>
+                    <td>Sunday Time</td>
+                    <td>7am-10pm Sun</td>
+                    <td>Time-and-a-third</td>
+                </tr>
+                <tr>
+                    <td>Night Time</td>
+                    <td>10pm-7am Mon-Sun</td>
+                    <td>Time-and-a-half</td>
+                </tr>
+            </table>
+
+            <p>The only thing to be aware of is a case such as a shift starting on Saturday at 8pm, finishing Sunday 8am, would count as:</p>
+
+            <ul>
+                <li>Total Hours: 12</li>
+                <li>Plain Hours: 0</li>
+                <li>Night Hours: 9 (i.e. 10pm Saturday to 7am Sunday)</li>
+                <li>Saturday Hours: 2 (i.e. 8pm Saturday to 10pm Saturday)</li>
+                <li>Sunday Hours: 1 (i.e. 7am Sunday to 8am Sunday)</li>
+            </ul>
+
+            <p>NHS Employers' rotas calculate this incorrectly: e.g. <a href="http://www.nhsemployers.org/your-workforce/need-to-know/junior-doctors-contract/pay-calculator/rotas#Rota6">Rota 6</a> appears to count the final 3 hours of week 5 Saturday's night shift as "Plain Time".</p>
+
+            <h2>Proposed Package calculations</h2>
+
+            <h3>Basic Pay</h3>
+
+            <p>The "Current Basic Pay" you provide is mapped using the NHS Employers' definitions on <a href="http://www.nhsemployers.org/~/media/Employers/Documents/Need%20to%20know/JD%20A4%20booklet%20FINAL.pdf" target="_blank">page 7</a>:</p>
+
+            <p><img src="img/salary_mapping.PNG" alt="Salary Mapping from NHS Employers' Guidance"/></p>
+
+            <p>Less-Than-Full-Time employees Basic Pay will be reduced by the percentage they work, e.g. LTFT F5 (20-23.9hrs/wk) would be reduced by half. See for example the <a href="http://www.rcoa.ac.uk/system/files/TRG-LTFT-AZ-GUIDE_0.pdf" target="_blank">RCoA LTFT A-Z guide (page 6)</a>.</p>
+
+            <h3>London Weighting</h3>
+
+            <p>Assuming this is unchanged, as it isn't reference by NHS Employers.</p>
+
+            <p>Assuming Less-Than-Full-Time employees receive the percentage of this weighting that they work (e.g. LTFT F5 = 50%)</p>
+
+            <p>North Central and East London, West London, South London attract a &pound;2,162 weighting, as set out in the <a href="http://www.nhsemployers.org/~/media/Employers/Documents/Pay%20and%20reward/Pay%20and%20Conditions%20Circular%20MD%2012015.pdf" target="_blank">NHS Pay and Conditions Circular (M&D) 1/2015 (page 14)</a>.</p>
+
+            <p>(Resident staff receive a lower weighting of &pound;602, but this calculator does not allow for this)</p>
+
+            <h3>Additional Rostered Hours</h3>
+
+            <p>"Additional rostered hours are any hours per week above the 40 basic, full-time hours. They will be paid at the basic hourly rate, with pay enhancements for hours falling in unsocial hour periods." <a href="http://www.nhsemployers.org/~/media/Employers/Documents/Need%20to%20know/JD%20A4%20booklet%20FINAL.pdf" target="_blank">(NHS Employers contract offer, page 8)</a></p>
+
+            <p><b>Additional Rostered Hours</b> = Total Hours - 40, up to a maximum of 8.</p>
+
+            <p><b>Hourly Rate</b> is Basic Pay / 52 / 40 (i.e. 52 weeks a year, 40 hours a week)</p>
+
+            <p>(Note that Less-Than-Full-Time employees Basic Pay has already been reduced, so is not calculated again)</p>
+
+            <p><b>Annual Additional Rostered Pay</b> = Average Weekly Additional Rostered Hours * Hourly Rate * 52</p>
+
+            <h3>Sunday Hours</h3>
+
+            <p><b>Sunday Weighting</b> = 33%</p>
+
+            <p><b>Annual Sunday Pay</b> = Average Weekly Sunday Hours * (Hourly Rate / 3) * 52</p>
+
+            <h3>Saturday Hours</h3>
+
+            <p><b>Saturday Weighting</b> = 33%</p>
+
+            <p><b>Annual Saturday Pay</b> = Average Weekly Saturday Hours * (Hourly Rate / 3) * 52</p>
+
+            <h3>Night Hours</h3>
+
+            <p><b>Night Weighting</b> = 50%</p>
+
+            <p><b>Annual Night Pay</b> = Average Weekly Night Hours * (Hourly Rate / 2) * 52</p>
+
+            <h3>On-Call Allowance</h3>
+
+            <p>The percentage you provide is taken of the Basic Pay.</p>
+
+            <p>(Note that Less-Than-Full-Time employees Basic Pay has already been reduced, so is not calculated again)</p>
+
+            <h3>Programme Premia</h3>
+
+            <p>The Current Grade and Specialty you provide are used to calculate this (see <a href="http://www.nhsemployers.org/~/media/Employers/Documents/Need%20to%20know/JD%20A4%20booklet%20FINAL.pdf" target="_blank">NHS Employers contract offer, page 23</a>):</p>
+
+            <ul>
+                <li>General practice (in vocational training practice placements): &pound;8,200 p.a.</li>
+                <li>Emergency Medicine (ST4 and above): &pound;1,500 p.a.</li>
+                <li>Psychiatry (ST1 and above): &pound;1,500 p.a.</li>
+            </ul>
+
+            <p>Assuming Less-Than-Full-Time employees receive the percentage of this premia that they work (e.g. LTFT F5 = 50%)</p>
+
+            <p><b>Note: Emergency Medicine Premia is flawed:</b> please read <a href="http://www.bishley.com/junior-contract/" target="_blank">Steven Bishop</a>'s excellent <a href="http://www.bishley.com/junior-contract/wp-content/uploads/2015/11/Problems-with-NHSE-Pay-Calculator-v1.0.pdf" target="_blank">analysis of the proposed contract</a>, in particular page 13.</p>
+
+
+        </section>
