@@ -210,6 +210,12 @@ app.controller("SalaryCalc",
 				"Less than full time - F8: 32-35.9hrs/wk (80-89% of full time)": 80,
 				"Less than full time - F9: 36-39.9hrs/wk (90-99% of full time)": 90
 			};
+			$scope.onCall = {
+				"None": 0,
+				"Less than 1:8": 2,
+				"Less than 1:4 up to 1:8": 4,
+				"1:4 or more frequently": 6
+			};
 
 			var londonDeaneries = {
 				"North Central and East London": true,
@@ -277,20 +283,25 @@ app.controller("SalaryCalc",
 				// on call allowance
 				$scope.calculated.OnCallAllowance = 0;
 				$scope.calculated.OnCallAllowanceValue = 0;
-				$scope.calculated.OnCallAllowanceText = "None";
-				if ($scope.rotaSummary.onCallDays > 0) {
-					if ($scope.rotaSummary.onCallDays > 8) { // works fewer than 1 in 8 days
-						$scope.calculated.OnCallAllowance = onCallAllowance[8];
-						$scope.calculated.OnCallAllowanceText = onCallText[8];
-					} else if ($scope.rotaSummary.onCallDays > 4) { // works more than 1 in 8, fewer than 1 in 4
-						$scope.calculated.OnCallAllowance = onCallAllowance[4];
-						$scope.calculated.OnCallAllowanceText = onCallText[4];
-					} else { // works 1 in 4 or more frequently
-						$scope.calculated.OnCallAllowance = onCallAllowance[0];
-						$scope.calculated.OnCallAllowanceText = onCallText[0];
-					}
+
+				if ($scope.calculated.OnCallAllowanceText != "None") {
+					$scope.calculated.OnCallAllowance = $scope.onCall[$scope.calculated.OnCallAllowanceText];
 					$scope.calculated.OnCallAllowanceValue = $scope.calculated.NodePay / 100 * $scope.calculated.OnCallAllowance;
 				}
+
+				//if ($scope.rotaSummary.weeklyStats.onCallDays > 0) {
+				//	if ($scope.rotaSummary.weeklyStats.onCallDays > 8) { // works fewer than 1 in 8 days
+				//		$scope.calculated.OnCallAllowance = onCallAllowance[8];
+				//		$scope.calculated.OnCallAllowanceText = onCallText[8];
+				//	} else if ($scope.rotaSummary.weeklyStats.onCallDays > 4) { // works more than 1 in 8, fewer than 1 in 4
+				//		$scope.calculated.OnCallAllowance = onCallAllowance[4];
+				//		$scope.calculated.OnCallAllowanceText = onCallText[4];
+				//	} else { // works 1 in 4 or more frequently
+				//		$scope.calculated.OnCallAllowance = onCallAllowance[0];
+				//		$scope.calculated.OnCallAllowanceText = onCallText[0];
+				//	}
+				//	$scope.calculated.OnCallAllowanceValue = $scope.calculated.NodePay / 100 * $scope.calculated.OnCallAllowance;
+				//}
 
 				// specialty training premia
 				$scope.calculated.Premia = 0;
@@ -307,12 +318,14 @@ app.controller("SalaryCalc",
 				}
 
 				// extra hours
-				var hourlyBasic = $scope.calculated.NodePay / 40;
+				var hourlyBasic = $scope.calculated.NodePay / 52 / 40;
+
+				$scope.additionalHours = Math.min($scope.rotaSummary.weeklyStats.additionalRosteredHours, 8);
 				$scope.calculated.ExtraHoursValue = {
-					additionalBasicHours: Math.min($scope.rotaSummary.weeklyStats.additionalRosteredHours, 8) * hourlyBasic, // max of 8
-					nightHours: (hourlyBasic / 100 * 50) * $scope.rotaSummary.weeklyStats.nightHours,
-					satHours: (hourlyBasic / 100 * 33) * $scope.rotaSummary.weeklyStats.saturdayHours,
-					sunHours: (hourlyBasic / 100 * 33) * $scope.rotaSummary.weeklyStats.sundayHours
+					additionalBasicHours: $scope.additionalHours * hourlyBasic * 52, // max of 8
+					nightHours: (hourlyBasic / 100 * 50) * $scope.rotaSummary.weeklyStats.nightHours * 52,
+					satHours: (hourlyBasic / 100 * 33) * $scope.rotaSummary.weeklyStats.saturdayHours * 52,
+					sunHours: (hourlyBasic / 100 * 33) * $scope.rotaSummary.weeklyStats.sundayHours * 52
 				};
 
 				// current package

@@ -168,7 +168,7 @@ app.controller("RotaViewer",
 				var weeks = rotaSummary.totalDays / 7;
 				var totalHours = rotaSummary.timeCategories.totalTime / weeks;
 				var plainHours = (rotaSummary.timeCategories.plainTime > 0) ? rotaSummary.timeCategories.plainTime / weeks : 0;
-				var additionalRosteredHours = Math.max(0, plainHours - 40);
+				var additionalRosteredHours = Math.max(0, totalHours - 40);
 				var saturdayHours = (rotaSummary.timeCategories.satTime > 0) ? rotaSummary.timeCategories.satTime / weeks : 0;
 				var sundayHours = (rotaSummary.timeCategories.sunTime > 0) ? rotaSummary.timeCategories.sunTime / weeks : 0;
 				var nightHours = (rotaSummary.timeCategories.nightTime > 0) ? rotaSummary.timeCategories.nightTime / weeks : 0;

@@ -852,7 +852,9 @@ angular.module("busilyApp")
       stats.body.values = {};
       for (var j=0; j<body.values.length; j++) {
         for (var k=0; k<body.values[j].length; k++) {
-          var bodyValue = body.values[j][k].trim().toUpperCase();
+          var bodyValue = "";
+          if (body.values[j][k] != undefined)
+            bodyValue = body.values[j][k].trim().toUpperCase();
           if (stats.body.values[bodyValue] > 0) {
             stats.body.values[bodyValue]++;
           } else {

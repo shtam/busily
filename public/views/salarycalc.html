@@ -46,6 +46,15 @@
             </md-input-container>
 
             <md-input-container flex>
+                <label>Non-Resident On-Call Frequency</label>
+                <md-select aria-label="Non-Resident On-Call Frequency" ng-model="calculated.OnCallAllowanceText" ng-change="recalculate()">
+                    <md-option ng-repeat="(key, value) in onCall" value="{{key}}">
+                        {{key}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container flex>
                 <label>Deanery</label>
                 <md-select ng-model="calculated.Deanery" ng-change="recalculate()">
                     <md-option ng-repeat="deanery in deaneries" value="{{$index}}">
@@ -103,7 +112,7 @@
                     <td class="currency">{{calculated.LondonValue | currency}}</td>
                 </tr>
                 <tr>
-                    <td>Additional Rostered Hours ({{rotaSummary.weeklyStats.additionalRosteredHours | number : 2}})</td>
+                    <td>Additional Rostered Hours ({{additionalHours | number : 2}})</td>
                     <td class="currency">N/A</td>
                     <td class="currency">{{calculated.ExtraHoursValue.additionalBasicHours | currency}}</td>
                 </tr>
